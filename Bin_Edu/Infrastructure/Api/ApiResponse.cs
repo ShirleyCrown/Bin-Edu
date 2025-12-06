@@ -1,4 +1,4 @@
-﻿namespace Bin_Edu.Controller.Infrastructure.Api
+﻿namespace Bin_Edu.Infrastructure.Api
 {
     public class ApiResponse<T>
     {

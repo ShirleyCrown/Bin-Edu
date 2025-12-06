@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Bin_Edu.Controller.Infrastructure.Database.Models;
+using Bin_Edu.Infrastructure.Database.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bin_Edu.Controller.Infrastructure
+namespace Bin_Edu.Infrastructure
 {
     public class AppDBContext : IdentityDbContext<AppUser>
     {

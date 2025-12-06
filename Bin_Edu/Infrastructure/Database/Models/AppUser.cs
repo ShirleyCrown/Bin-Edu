@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace Bin_Edu.Controller.Infrastructure.Database.Models
+namespace Bin_Edu.Infrastructure.Database.Models
 {
     public class AppUser : IdentityUser
     {
