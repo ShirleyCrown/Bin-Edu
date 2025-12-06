@@ -16,11 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controller\Infrastructure\Database\Migrations\" />
-    <Folder Include="Controller\Infrastructure\Database\Models\" />
-    <Folder Include="Controller\Infrastructure\Database\Seeders\" />
-    <Folder Include="Controller\ResponseDto\" />
-    <Folder Include="Controller\RequestDto\" />
+    <Folder Include="Infrastructure\Database\Migrations\" />
+    <Folder Include="Infrastructure\Database\Models\" />
     <Folder Include="Views\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
