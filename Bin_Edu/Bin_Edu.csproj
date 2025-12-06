@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-Bin_Edu-b7f56de8-3264-4ff2-9828-e13dc9d5569a</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.22" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.22" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.22" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controller\Infrastructure\Database\Migrations\" />
+    <Folder Include="Controller\Infrastructure\Database\Models\" />
+    <Folder Include="Controller\Infrastructure\Database\Seeders\" />
+    <Folder Include="Controller\ResponseDto\" />
+    <Folder Include="Controller\RequestDto\" />
+    <Folder Include="Views\" />
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
+</Project>
