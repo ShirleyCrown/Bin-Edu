@@ -1,0 +1,57 @@
+<div class="modal fade" id="updateCourseModal" tabindex="-1" aria-labelledby="updateCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="updateCourseModalLabel">Update course</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                 <!-- ERROR ALERT -->
+                <div class="d-none alert alert-danger d-flex align-items-center" role="alert">
+                    <span class="material-symbols-outlined me-2">error</span>
+                    <div id="updateCourseErrorMessage">
+                        
+                    </div>
+                </div>
+
+                <!-- FORM -->
+                <form id="updateCourseForm">
+                    <div class="mb-3">
+                        <label for="CourseTitle" class="col-form-label">Title:</label>
+                        <input type="text" class="form-control" id="CourseTitle" name="UpdateCourseTitle">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="CourseDescription" class="col-form-label">Description:</label>
+                        <textarea type="text" class="form-control" id="CourseDescription" name="UpdateCourseDescription"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="CourseSubject" class="col-form-label">Subject:</label>
+                        <select class="form-select" id="CourseSubject" name="UpdateCourseSubject" aria-label="Course subject select">
+                            <option value="" selected>Select subject</option>
+                            <option value="Math">Math</option>
+                            <option value="Literature">Literature</option>
+                            <option value="English">English</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="CoursePrice" class="col-form-label">Price (VND):</label>
+                        <input type="text" class="form-control" id="CoursePrice" name="UpdateCoursePrice">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="TeachingTeacherName" class="col-form-label">Teacher Name:</label>
+                        <input type="text" class="form-control" id="TeachingTeacherName" name="UpdateTeachingTeacherName">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="updateCourse()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
