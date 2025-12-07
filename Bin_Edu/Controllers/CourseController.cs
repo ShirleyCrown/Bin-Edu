@@ -166,5 +166,130 @@ namespace Bin_Edu.Controllers
 
         }
 
+
+        [HttpGet("admin/dashboard/course-management/get-course/{course_id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetCourseAdminApi(
+            [FromRoute(Name = "course_id")] int courseId 
+        )
+        {
+
+            GetCourseAdminResponse? responseDto = await _context.Courses
+                .Select(c => new GetCourseAdminResponse
+                {
+                    Id = c.Id,
+                    CourseTitle = c.CourseTitle,
+                    CourseDescription = c.CourseDescription,
+                    CourseSubject = c.CourseSubject,
+                    TeachingTeacherName = c.TeachingTeacherName,
+                    CoursePrice = c.CoursePrice,
+                    NumberOfStudents = c.CourseRegistrations.Count
+                })
+                .FirstOrDefaultAsync(c => c.Id == courseId);
+
+
+            return Json(new ApiResponse<dynamic>
+            {
+                Message = "Get Course successfully",
+                Data = responseDto
+            });
+        }
+
+        [HttpPut("admin/dashboard/course-management/update-course/{course_id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> UpdateCourseAdminApi(
+            [FromRoute(Name = "course_id")] int courseId,
+            [FromForm] UpdateCourseAdminRequest requestDto
+        )
+        {
+
+            // Validation
+            // 1. NULL OR EMPTY VALIDATION
+            if (string.IsNullOrWhiteSpace(requestDto.UpdateTeachingTeacherName))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Teaching teacher name is required.",
+                    Message = "Teaching teacher name is required."
+                });
+
+            if (string.IsNullOrWhiteSpace(requestDto.UpdateCourseTitle))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Course title is required.",
+                    Message = "Course title is required."
+                });
+
+            if (string.IsNullOrWhiteSpace(requestDto.UpdateCourseDescription))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Course description is required.",
+                    Message = "Course description is required."
+                });
+
+            if (string.IsNullOrWhiteSpace(requestDto.UpdateCourseSubject))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Course subject is required.",
+                    Message = "Course subject is required."
+                });
+
+            if (string.IsNullOrWhiteSpace(requestDto.UpdateCoursePrice))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Course price is required.",
+                    Message = "Course price is required."
+                });
+
+            // 2. PRICE VALIDATION (NOT NEGATIVE)
+            if (!long.TryParse(requestDto.UpdateCoursePrice, out long price))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Course price must be a valid number.",
+                    Message = "Course price must be a valid number."
+                });
+
+            if (price < 0)
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Course price cannot be negative.",
+                    Message = "Course price cannot be negative."
+                });
+
+            // 3. COURSE TITLE UNIQUE CHECK (EF CORE)
+            bool titleExists = await _context.Courses
+                .AnyAsync(x => 
+                    x.Id != courseId && 
+                    x.CourseTitle == requestDto.UpdateCourseTitle
+                );
+
+            if (titleExists)
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Course title already exists.",
+                    Message = "Course title already exists."
+                });
+
+
+            Course course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == courseId);
+
+            course.TeachingTeacherName = requestDto.UpdateTeachingTeacherName;
+            course.CourseTitle = requestDto.UpdateCourseTitle;
+            course.CourseDescription = requestDto.UpdateCourseDescription;
+            course.CourseSubject = requestDto.UpdateCourseSubject;
+            course.CoursePrice = price;
+
+
+            await _context.SaveChangesAsync();
+
+            return Json(new ApiResponse<dynamic>
+            {
+                Data = "admin/dashboard/course-management",
+                Message = "Course updated successfully."
+            });
+
+        }
+
+
+
     }
 }
