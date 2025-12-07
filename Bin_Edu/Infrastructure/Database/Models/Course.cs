@@ -17,7 +17,7 @@ namespace Bin_Edu.Infrastructure.Database.Models
 
         public string CourseDescription { get; set; }
 
-        public int CourseSubject { get; set; }
+        public string CourseSubject { get; set; }
 
         public long CoursePrice { get; set; }
 

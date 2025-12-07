@@ -34,6 +34,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
 
             await GenerateRoleData();
             await GenerateUserData();
+            await GenerateCourseData();
 
             Console.WriteLine("✅ Seeder completed successfully!");
         }
@@ -123,7 +124,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
             var admin = new AppUser
             {
                 UserName = "admin",
-                Email = "admin@gmail.com",
+                Email = "N/A",
                 FullName = "Quản trị viên",
                 PhoneNumber = "N/A",
                 Grade = "N/A",
@@ -136,6 +137,104 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
             await _userManager.AddToRoleAsync(admin, "ADMIN");
 
             Console.WriteLine("👨‍🏫 Users generated (admin kept).");
+        }
+
+
+        // // ================================================================
+        // // COURSES
+        // // ================================================================
+        private async Task GenerateCourseData()
+        {
+
+            var courses = new List<Course>
+            {
+                new Course
+                {
+                    TeachingTeacherName = "Nguyen Van An",
+                    CourseTitle = "Basic Algebra",
+                    CourseDescription = "Learn foundational algebra concepts and problem-solving skills.",
+                    CourseSubject = "Math",
+                    CoursePrice = 1200000
+                },
+                new Course
+                {
+                    TeachingTeacherName = "Tran Thi Bich",
+                    CourseTitle = "Geometry Mastery",
+                    CourseDescription = "Understand shapes, angles, and geometric proofs.",
+                    CourseSubject = "Math",
+                    CoursePrice = 1500000
+                },
+                new Course
+                {
+                    TeachingTeacherName = "Le Thanh Hai",
+                    CourseTitle = "English Grammar for Beginners",
+                    CourseDescription = "Master basic English grammar rules and sentence structures.",
+                    CourseSubject = "English",
+                    CoursePrice = 1000000
+                },
+                new Course
+                {
+                    TeachingTeacherName = "Pham Minh Chau",
+                    CourseTitle = "Spoken English Essentials",
+                    CourseDescription = "Improve daily communication and pronunciation skills.",
+                    CourseSubject = "English",
+                    CoursePrice = 1800000
+                },
+                new Course
+                {
+                    TeachingTeacherName = "Vo Hoang Long",
+                    CourseTitle = "Advanced English Writing",
+                    CourseDescription = "Learn to write essays, reports, and professional emails.",
+                    CourseSubject = "English",
+                    CoursePrice = 2000000
+                },
+                new Course
+                {
+                    TeachingTeacherName = "Nguyen Thi Lan",
+                    CourseTitle = "Vietnamese Literature Basics",
+                    CourseDescription = "Explore classic Vietnamese literary works and writers.",
+                    CourseSubject = "Literature",
+                    CoursePrice = 900000
+                },
+                new Course
+                {
+                    TeachingTeacherName = "Do Quang Minh",
+                    CourseTitle = "Modern Literature Analysis",
+                    CourseDescription = "Analyze modern novels, poems, and short stories.",
+                    CourseSubject = "Literature",
+                    CoursePrice = 1400000
+                },
+                new Course
+                {
+                    TeachingTeacherName = "Bui Thu Ha",
+                    CourseTitle = "Trigonometry Made Easy",
+                    CourseDescription = "Learn sine, cosine, tangent, and practical applications.",
+                    CourseSubject = "Math",
+                    CoursePrice = 1600000
+                },
+                new Course
+                {
+                    TeachingTeacherName = "Pham Duc Khang",
+                    CourseTitle = "IELTS English Preparation",
+                    CourseDescription = "Full preparation for all four IELTS skills.",
+                    CourseSubject = "English",
+                    CoursePrice = 3200000
+                },
+                new Course
+                {
+                    TeachingTeacherName = "Ngo Thi Mai",
+                    CourseTitle = "Poetry Appreciation",
+                    CourseDescription = "Understand and enjoy poetry through guided analysis.",
+                    CourseSubject = "Literature",
+                    CoursePrice = 1100000
+                }
+            };
+
+            await _context.Courses.AddRangeAsync(courses);
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine("Courses generated.");
+
         }
 
 
