@@ -52,8 +52,27 @@ namespace Bin_Edu.Controllers
         {
 
 
+            // VALIDATION
+
+            if (requestDto.Username == null || requestDto.Password == null)
+            {
+                return BadRequest(new ApiResponse<string>
+                {
+                    Message = "Invalid Admin credentials",
+                    Data = "Invalid Admin credentials"
+                });
+            }
+
             var user = await _userManager.FindByNameAsync(requestDto.Username);
 
+            if (user == null)
+            {
+                return BadRequest(new ApiResponse<string>
+                {
+                    Message = "Admin account not existed",
+                    Data = "Admin account not existed"
+                });
+            }
 
             var result = await _signInManager.PasswordSignInAsync(
                 user,
@@ -63,6 +82,14 @@ namespace Bin_Edu.Controllers
             );
 
 
+            if (!result.Succeeded)
+            {
+                return BadRequest(new ApiResponse<string>
+                {
+                    Message = "Invalid Admin credentials",
+                    Data = "Invalid Admin credentials"
+                });
+            }
             
             
             return Json(new ApiResponse<string>
@@ -72,6 +99,18 @@ namespace Bin_Edu.Controllers
             });
         }
         
+
+        [HttpPost("admin/logout")]
+        public async Task<IActionResult> HandleLogoutAdmin()
+        {
+            await _signInManager.SignOutAsync();
+            
+            return Json(new ApiResponse<string>
+            {
+                Message = "Logout successful",
+                Data = "/admin/login"
+            });
+        }
 
 
     }

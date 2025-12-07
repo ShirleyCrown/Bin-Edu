@@ -2,6 +2,9 @@
 
 async function loginAdmin() {
 
+    const alertBox = document.querySelector(".alert-danger");
+    alertBox.classList.add("d-none");
+
     try {
 
         const loginAdminForm = document.getElementById("loginAdminForm");
@@ -19,7 +22,22 @@ async function loginAdmin() {
 
     }
     catch (ex) {
-        console.log(ex);
+
+        if (ex.response && ex.response.data) {
+
+            console.log(ex);
+            
+
+            const errorMessage = ex.response.data.message;
+
+            const loginAdminErrorMessage = document.getElementById("loginAdminErrorMessage");
+
+            loginAdminErrorMessage.innerHTML = `<strong>Login Error:</strong> ${errorMessage}`;
+
+
+            alertBox.classList.remove("d-none");
+
+        }
         
     }
 
