@@ -1,9 +1,13 @@
 
-async function fetchCourses(page = 1) {
+async function fetchCourses(page = 0) {
     const courseTableBody = document.getElementById("courseTableBody");
 
     try {
-        const response = await axios.get(`/admin/dashboard/course-management/get-courses?page=${page}`);
+        const response = await axios.get(`/admin/dashboard/course-management/get-courses`, {
+            params: {
+                "page": page
+            },
+        });
         const responseData = response.data.data;
 
         // Clear old rows before re-rendering
@@ -40,18 +44,18 @@ function generatePagination(totalPages, currentPage) {
 
     // ---- « PREVIOUS BUTTON ----
     const prevLi = document.createElement("li");
-    prevLi.className = "page-item " + (currentPage === 1 ? "disabled" : "");
+    prevLi.className = "page-item " + (currentPage === 0 ? "disabled" : "");
     prevLi.innerHTML = `<a class="page-link" href="#">«</a>`;
     prevLi.onclick = () => {
-        if (currentPage > 1) fetchCourses(currentPage - 1);
+        if (currentPage > 1) fetchCourses(currentPage);
     };
     pagination.appendChild(prevLi);
 
     // ---- PAGE NUMBERS ----
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = 0; i < totalPages; i++) {
         const li = document.createElement("li");
         li.className = "page-item " + (i === currentPage ? "active" : "");
-        li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+        li.innerHTML = `<a class="page-link" href="#">${i + 1}</a>`;
 
         li.onclick = () => fetchCourses(i);
 
@@ -63,7 +67,7 @@ function generatePagination(totalPages, currentPage) {
     nextLi.className = "page-item " + (currentPage === totalPages ? "disabled" : "");
     nextLi.innerHTML = `<a class="page-link" href="#">»</a>`;
     nextLi.onclick = () => {
-        if (currentPage < totalPages) fetchCourses(currentPage + 1);
+        if (currentPage < totalPages) fetchCourses(currentPage);
     };
     pagination.appendChild(nextLi);
 }

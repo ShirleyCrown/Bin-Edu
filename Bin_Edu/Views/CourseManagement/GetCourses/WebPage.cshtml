@@ -37,12 +37,13 @@
 
 <!-- TABLE -->
 <div class="card">
-    @* <div class="card-header d-flex justify-content-between">
+    <div class="card-header d-flex justify-content-between">
         <input class="form-control w-25" placeholder="Search students...">
-        <button class="btn btn-outline-danger" disabled>
-            <i class="bi bi-trash me-1"></i> Bulk Delete
+
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createCourseModal">
+            <i class="bi bi-plus-square"></i> Create Course
         </button>
-    </div> *@
+    </div>
 
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
@@ -76,4 +77,9 @@
 
 
 
+@await Html.PartialAsync("~/Views/CourseManagement/CreateCourse/PopupModal.cshtml")
+
+
+
 <script src="/static/CourseManagement/GetCourses/WebScript.js"></script>
+<script src="/static/CourseManagement/CreateCourse/PopupScript.js"></script>
