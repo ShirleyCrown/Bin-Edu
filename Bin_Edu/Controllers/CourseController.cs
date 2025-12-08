@@ -290,6 +290,28 @@ namespace Bin_Edu.Controllers
         }
 
 
+        [HttpDelete("admin/dashboard/course-management/delete-course/{course_id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> DeleteCourseAdminApi(
+            [FromRoute(Name = "course_id")] int courseId
+        )
+        {
+
+            Course course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == courseId);
+
+            _context.Courses.Remove(course);
+            await _context.SaveChangesAsync();
+            
+
+            return Json(
+                new ApiResponse<dynamic>
+                {
+                    Message = "Delete course successfully",
+                    Data = "admin/dashboard/course-management"
+                }
+            );
+        }
+
 
     }
 }

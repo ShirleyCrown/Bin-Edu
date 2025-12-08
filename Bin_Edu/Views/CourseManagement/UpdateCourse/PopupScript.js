@@ -1,5 +1,5 @@
 
-let courseId = "";
+let updateCourseId = "";
 
 async function initUpdateModal(id) {
 
@@ -21,7 +21,7 @@ async function initUpdateModal(id) {
         coursePriceInput.value = responseData.coursePrice;
         teachingTeacherNameInput.value = responseData.teachingTeacherName;
 
-        courseId = responseData.id;        
+        updateCourseId = responseData.id;        
 
 
         const updateCourseModal = new bootstrap.Modal(document.getElementById('updateCourseModal'));
@@ -49,7 +49,7 @@ async function updateCourse() {
         const formData = new FormData(updateCourseForm);
 
         
-        const response = await axios.put(`/admin/dashboard/course-management/update-course/${courseId}`, formData)
+        const response = await axios.put(`/admin/dashboard/course-management/update-course/${updateCourseId}`, formData)
         
 
         const redirectUrl = response.data.data;
