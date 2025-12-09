@@ -1,0 +1,62 @@
+@{
+    Layout = "~/Views/Layouts/AdminLayout/LayoutPage.cshtml";
+    ViewData["Title"] = "Student Management";
+}
+
+
+
+<h2 class="mb-4">Student Management</h2>
+
+<!-- TABLE -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <input class="form-control w-25" placeholder="Search students...">
+
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createStudentModal">
+            <i class="bi bi-plus-square"></i> Create Student
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Grade</th>
+                    <th>Phone Number</th>
+                    <th>School</th>
+                    <th>Date of Birth</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="studentTableBody">
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="card-footer d-flex justify-content-center">
+        <nav>
+            <ul class="pagination mb-0" id="pagination">
+
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+
+
+@await Html.PartialAsync("~/Views/StudentManagement/CreateStudent/PopupModal.cshtml")
+@await Html.PartialAsync("~/Views/StudentManagement/DeleteStudent/PopupModal.cshtml")
+@await Html.PartialAsync("~/Views/StudentManagement/RegenPassword/PopupModal.cshtml")
+
+
+
+<script src="/static/StudentManagement/GetStudents/WebScript.js"></script>
+<script src="/static/StudentManagement/DeleteStudent/PopupScript.js"></script>
+<script src="/static/StudentManagement/CreateStudent/PopupScript.js"></script>
+<script src="/static/StudentManagement/RegenPassword/PopupScript.js"></script>

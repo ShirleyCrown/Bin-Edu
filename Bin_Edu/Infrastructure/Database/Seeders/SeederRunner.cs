@@ -119,8 +119,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
         // // ================================================================
         private async Task GenerateUserData()
         {
-
-            // Admin 
+            // ===== ADMIN =====
             var admin = new AppUser
             {
                 UserName = "admin",
@@ -136,8 +135,32 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
             await _userManager.CreateAsync(admin, "123");
             await _userManager.AddToRoleAsync(admin, "ADMIN");
 
-            Console.WriteLine("👨‍🏫 Users generated (admin kept).");
+            // ===== STUDENTS =====
+            for (int i = 1; i <= 10; i++)
+            {
+                var student = new AppUser
+                {
+                    UserName = $"student{i}",
+                    Email = $"student{i}@example.com",
+                    FullName = $"Sinh viên {i}",
+                    PhoneNumber = $"09000000{i}",
+                    Grade = "12",
+                    School = "THPT ABC",
+                    Dob = new DateOnly(2006, 1, i),
+                    EmailConfirmed = true,
+                };
+
+                var result = await _userManager.CreateAsync(student, "123");
+
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(student, "STUDENT");
+                }
+            }
+
+            Console.WriteLine("👨‍🏫 Admin + 10 Students generated.");
         }
+
 
 
         // // ================================================================
