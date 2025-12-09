@@ -36,6 +36,7 @@ namespace Bin_Edu.Controllers
         }
 
         [HttpGet("admin/dashboard/student-management")]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult GetStudentManagementAdminPage()
         {
             return View("~/Views/StudentManagement/GetStudents/WebPage.cshtml");

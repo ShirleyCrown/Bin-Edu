@@ -46,7 +46,7 @@ function generatePagination(totalPages, currentPage) {
     prevLi.className = "page-item " + (currentPage === 0 ? "disabled" : "");
     prevLi.innerHTML = `<a class="page-link" href="#">«</a>`;
     prevLi.onclick = () => {
-        if (currentPage > 1) fetchCourses(currentPage);
+        if (currentPage > 0) fetchCourses(0);
     };
     pagination.appendChild(prevLi);
 
@@ -66,7 +66,7 @@ function generatePagination(totalPages, currentPage) {
     nextLi.className = "page-item " + (currentPage === totalPages ? "disabled" : "");
     nextLi.innerHTML = `<a class="page-link" href="#">»</a>`;
     nextLi.onclick = () => {
-        if (currentPage < totalPages) fetchCourses(currentPage);
+        if (currentPage < totalPages) fetchCourses(totalPages - 1);
     };
     pagination.appendChild(nextLi);
 }
