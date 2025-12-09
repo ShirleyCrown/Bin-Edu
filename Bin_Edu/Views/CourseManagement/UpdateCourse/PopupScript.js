@@ -8,6 +8,9 @@ async function initUpdateModal(id) {
     const courseSubjectInput = document.getElementsByName("UpdateCourseSubject")[0];
     const coursePriceInput = document.getElementsByName("UpdateCoursePrice")[0];
     const teachingTeacherNameInput = document.getElementsByName("UpdateTeachingTeacherName")[0];
+    const openingDateInput = document.getElementsByName("UpdateOpeningDate")[0];
+    const endDateInput = document.getElementsByName("UpdateEndDate")[0];
+
 
     try {
         
@@ -20,6 +23,8 @@ async function initUpdateModal(id) {
         courseSubjectInput.value = responseData.courseSubject;
         coursePriceInput.value = responseData.coursePrice;
         teachingTeacherNameInput.value = responseData.teachingTeacherName;
+        openingDateInput.value = responseData.openingDate;
+        endDateInput.value = responseData.endDate;
 
         updateCourseId = responseData.id;        
 
@@ -39,7 +44,7 @@ async function initUpdateModal(id) {
 async function updateCourse() {
     
 
-    const alertBox = document.querySelector(".alert-danger");
+    const alertBox = document.querySelector(".update-alert-danger");
     alertBox.classList.add("d-none");
 
     try {

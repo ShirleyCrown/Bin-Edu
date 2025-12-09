@@ -45,19 +45,50 @@ namespace Bin_Edu.Controllers
         )
         {
 
-            List<GetCoursesAdminResponse> responseDto = await _context.Courses
-                .Select(c => new GetCoursesAdminResponse
+            List<Course> query = await _context.Courses
+                .Select(c => new Course
                 {
                     Id = c.Id,
                     CourseTitle = c.CourseTitle,
                     CourseSubject = c.CourseSubject,
                     TeachingTeacherName = c.TeachingTeacherName,
                     CoursePrice = c.CoursePrice,
-                    NumberOfStudents = c.CourseRegistrations.Count
+                    OpeningDate = c.OpeningDate,
+                    EndDate = c.EndDate,
+                    CourseRegistrations = c.CourseRegistrations
                 })
                 .Skip(page * 10)
                 .Take(10)
                 .ToListAsync();
+
+
+            List<GetCoursesAdminResponse> responseDto = new List<GetCoursesAdminResponse>();
+            foreach (var queryData in query)
+            {
+
+                DateTime openDt = queryData.OpeningDate.ToDateTime(TimeOnly.MinValue);
+                DateTime endDt = queryData.EndDate.ToDateTime(TimeOnly.MinValue);
+
+                // Get difference
+                TimeSpan diff = endDt - openDt;
+
+                // Full weeks
+                int weeks = diff.Days / 7;
+
+                GetCoursesAdminResponse responseData = new GetCoursesAdminResponse
+                {
+                    Id = queryData.Id,
+                    CourseTitle = queryData.CourseTitle,
+                    CourseSubject = queryData.CourseSubject,
+                    TeachingTeacherName = queryData.TeachingTeacherName,
+                    CoursePrice = queryData.CoursePrice,
+                    NumberOfStudents = queryData.CourseRegistrations.Count,
+                    WeekDuration = weeks
+                };
+
+                responseDto.Add(responseData);
+            }
+                
 
             int totalPages = await _context.Courses.CountAsync();
 
@@ -119,6 +150,20 @@ namespace Bin_Edu.Controllers
                     Message = "Course price is required."
                 });
 
+            if (string.IsNullOrWhiteSpace(requestDto.OpeningDate))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Opening date is required.",
+                    Message = "Opening date is required."
+                });
+
+            if (string.IsNullOrWhiteSpace(requestDto.EndDate))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "End date is required.",
+                    Message = "End date is required."
+                });
+
             // 2. PRICE VALIDATION (NOT NEGATIVE)
             if (!long.TryParse(requestDto.CoursePrice, out long price))
                 return BadRequest(new ApiResponse<dynamic>
@@ -145,6 +190,17 @@ namespace Bin_Edu.Controllers
                     Message = "Course title already exists."
                 });
 
+            // 4. OPENING DATE GEATER THAN END DATE 
+            bool openValid = DateOnly.TryParse(requestDto.OpeningDate, out DateOnly openingDate);
+            bool endValid  = DateOnly.TryParse(requestDto.EndDate, out DateOnly endDate);
+
+            if (openingDate > endDate)
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Opening Date cannot be greater than End Date.",
+                    Message = "Opening Date cannot be greater than End Date."
+                });
+
 
             Course course = new Course
             {
@@ -152,7 +208,9 @@ namespace Bin_Edu.Controllers
                 CourseTitle = requestDto.CourseTitle,
                 CourseDescription = requestDto.CourseDescription,
                 CourseSubject = requestDto.CourseSubject,
-                CoursePrice = price
+                CoursePrice = price,
+                OpeningDate = openingDate,
+                EndDate = endDate
             };
 
             _context.Courses.Add(course);
@@ -183,7 +241,9 @@ namespace Bin_Edu.Controllers
                     CourseSubject = c.CourseSubject,
                     TeachingTeacherName = c.TeachingTeacherName,
                     CoursePrice = c.CoursePrice,
-                    NumberOfStudents = c.CourseRegistrations.Count
+                    NumberOfStudents = c.CourseRegistrations.Count,
+                    OpeningDate = c.OpeningDate,
+                    EndDate = c.EndDate
                 })
                 .FirstOrDefaultAsync(c => c.Id == courseId);
 
@@ -240,6 +300,20 @@ namespace Bin_Edu.Controllers
                     Message = "Course price is required."
                 });
 
+            if (string.IsNullOrWhiteSpace(requestDto.UpdateOpeningDate))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Opening date is required.",
+                    Message = "Opening date is required."
+                });
+
+            if (string.IsNullOrWhiteSpace(requestDto.UpdateEndDate))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "End date is required.",
+                    Message = "End date is required."
+                });
+
             // 2. PRICE VALIDATION (NOT NEGATIVE)
             if (!long.TryParse(requestDto.UpdateCoursePrice, out long price))
                 return BadRequest(new ApiResponse<dynamic>
@@ -269,6 +343,17 @@ namespace Bin_Edu.Controllers
                     Message = "Course title already exists."
                 });
 
+            // 4. OPENING DATE GEATER THAN END DATE 
+            bool openValid = DateOnly.TryParse(requestDto.UpdateOpeningDate, out DateOnly openingDate);
+            bool endValid  = DateOnly.TryParse(requestDto.UpdateEndDate, out DateOnly endDate);
+
+            if (openingDate > endDate)
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Opening Date cannot be greater than End Date.",
+                    Message = "Opening Date cannot be greater than End Date."
+                });
+
 
             Course course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == courseId);
 
@@ -277,6 +362,8 @@ namespace Bin_Edu.Controllers
             course.CourseDescription = requestDto.UpdateCourseDescription;
             course.CourseSubject = requestDto.UpdateCourseSubject;
             course.CoursePrice = price;
+            course.OpeningDate = openingDate;
+            course.EndDate = endDate;
 
 
             await _context.SaveChangesAsync();
