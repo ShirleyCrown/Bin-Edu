@@ -10,6 +10,9 @@ async function fetchCourses(page = 0) {
         });
         const responseData = response.data.data;
 
+        console.log(response);
+        
+
         // Clear old rows before re-rendering
         courseTableBody.innerHTML = "";
 
@@ -20,6 +23,7 @@ async function fetchCourses(page = 0) {
                     <td>${responseData.courses[i].courseSubject}</td>
                     <td>${responseData.courses[i].teachingTeacherName}</td>
                     <td>${responseData.courses[i].coursePrice}</td>
+                    <td>${responseData.courses[i].weekDuration}</td>
                     <td>${responseData.courses[i].numberOfStudents}</td>
                     <td>
                         <button class="btn btn-sm btn-light" onclick="initUpdateModal(${responseData.courses[i].id})"><i class="bi bi-pencil"></i></button>

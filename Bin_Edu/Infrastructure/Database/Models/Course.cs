@@ -21,6 +21,10 @@ namespace Bin_Edu.Infrastructure.Database.Models
 
         public long CoursePrice { get; set; }
 
+        public DateOnly OpeningDate { get; set; }
+
+        public DateOnly EndDate { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

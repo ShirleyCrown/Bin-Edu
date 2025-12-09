@@ -16,5 +16,9 @@ namespace Bin_Edu.Controllers.RequestDto
         public string CourseSubject { get; set; }
 
         public string CoursePrice { get; set; }
+
+        public string OpeningDate { get; set; }
+        
+        public string EndDate { get; set; }
     }
 }

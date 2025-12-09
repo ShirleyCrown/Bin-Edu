@@ -177,7 +177,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CourseTitle = "Basic Algebra",
                     CourseDescription = "Learn foundational algebra concepts and problem-solving skills.",
                     CourseSubject = "Math",
-                    CoursePrice = 1200000
+                    CoursePrice = 1200000, 
+                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7)
                 },
                 new Course
                 {
@@ -185,7 +187,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CourseTitle = "Geometry Mastery",
                     CourseDescription = "Understand shapes, angles, and geometric proofs.",
                     CourseSubject = "Math",
-                    CoursePrice = 1500000
+                    CoursePrice = 1500000,
+                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(12 * 7)
                 },
                 new Course
                 {
@@ -193,7 +197,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CourseTitle = "English Grammar for Beginners",
                     CourseDescription = "Master basic English grammar rules and sentence structures.",
                     CourseSubject = "English",
-                    CoursePrice = 1000000
+                    CoursePrice = 1000000,
+                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(20 * 7)
                 },
                 new Course
                 {
@@ -201,7 +207,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CourseTitle = "Spoken English Essentials",
                     CourseDescription = "Improve daily communication and pronunciation skills.",
                     CourseSubject = "English",
-                    CoursePrice = 1800000
+                    CoursePrice = 1800000,
+                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(15 * 7)
                 },
                 new Course
                 {
@@ -209,7 +217,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CourseTitle = "Advanced English Writing",
                     CourseDescription = "Learn to write essays, reports, and professional emails.",
                     CourseSubject = "English",
-                    CoursePrice = 2000000
+                    CoursePrice = 2000000,
+                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(12 * 7)
                 },
                 new Course
                 {
@@ -217,7 +227,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CourseTitle = "Vietnamese Literature Basics",
                     CourseDescription = "Explore classic Vietnamese literary works and writers.",
                     CourseSubject = "Literature",
-                    CoursePrice = 900000
+                    CoursePrice = 900000,
+                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(17 * 7)
                 },
                 new Course
                 {
@@ -225,7 +237,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CourseTitle = "Modern Literature Analysis",
                     CourseDescription = "Analyze modern novels, poems, and short stories.",
                     CourseSubject = "Literature",
-                    CoursePrice = 1400000
+                    CoursePrice = 1400000,
+                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(16 * 7)
                 },
                 new Course
                 {
@@ -233,7 +247,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CourseTitle = "Trigonometry Made Easy",
                     CourseDescription = "Learn sine, cosine, tangent, and practical applications.",
                     CourseSubject = "Math",
-                    CoursePrice = 1600000
+                    CoursePrice = 1600000,
+                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7)
                 },
                 new Course
                 {
@@ -241,7 +257,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CourseTitle = "IELTS English Preparation",
                     CourseDescription = "Full preparation for all four IELTS skills.",
                     CourseSubject = "English",
-                    CoursePrice = 3200000
+                    CoursePrice = 3200000,
+                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7)
                 },
                 new Course
                 {
@@ -249,7 +267,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CourseTitle = "Poetry Appreciation",
                     CourseDescription = "Understand and enjoy poetry through guided analysis.",
                     CourseSubject = "Literature",
-                    CoursePrice = 1100000
+                    CoursePrice = 1100000,
+                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7)
                 }
             };
 

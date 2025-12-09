@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Bin_Edu.Controllers.ResponseDto
 {
-    public class GetCourseAdminResponse
+    public class GetCoursesResponse
     {
         public int Id { get; set; }
 
@@ -17,12 +17,10 @@ namespace Bin_Edu.Controllers.ResponseDto
 
         public string CourseSubject { get; set; }
 
+        public int WeekDuration { get; set; }
+
         public int NumberOfStudents { get; set; }
 
         public long CoursePrice { get; set; }
-
-        public DateOnly OpeningDate { get; set; }
-
-        public DateOnly EndDate { get; set; }
     }
 }
