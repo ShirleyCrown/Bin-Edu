@@ -1,9 +1,9 @@
 
-async function fetchCourses(page = 0) {
-    const courseTableBody = document.getElementById("courseTableBody");
+async function fetchStudents(page = 0) {
+    const courseTableBody = document.getElementById("studentTableBody");
 
     try {
-        const response = await axios.get(`/admin/dashboard/course-management/get-courses`, {
+        const response = await axios.get(`/admin/dashboard/student-management/get-students`, {
             params: {
                 "page": page
             },
@@ -13,17 +13,18 @@ async function fetchCourses(page = 0) {
         // Clear old rows before re-rendering
         courseTableBody.innerHTML = "";
 
-        for (let i = 0; i < responseData.courses.length; i++) {
+        for (let i = 0; i < responseData.students.length; i++) {
             courseTableBody.innerHTML += `
                 <tr>
-                    <td>${responseData.courses[i].courseTitle}</td>
-                    <td>${responseData.courses[i].courseSubject}</td>
-                    <td>${responseData.courses[i].teachingTeacherName}</td>
-                    <td>${responseData.courses[i].coursePrice}</td>
-                    <td>${responseData.courses[i].numberOfStudents}</td>
+                    <td>${responseData.students[i].fullName}</td>
+                    <td>${responseData.students[i].email}</td>
+                    <td>${responseData.students[i].grade}</td>
+                    <td>${responseData.students[i].phoneNumber}</td>
+                    <td>${responseData.students[i].school}</td>
+                    <td>${responseData.students[i].dob}</td>
                     <td>
-                        <button class="btn btn-sm btn-light" onclick="initUpdateModal(${responseData.courses[i].id})"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-sm btn-light text-danger" onclick="initDeleteModal(${responseData.courses[i].id})"><i class="bi bi-trash"></i></button>
+                        <button class="btn btn-sm btn-light text-primary" onclick="initRegenPasswordModal('${responseData.students[i].id}')"><i class="bi bi-arrow-repeat"></i></button>
+                        <button class="btn btn-sm btn-light text-danger" onclick="initDeleteModal('${responseData.students[i].id}')"><i class="bi bi-trash"></i></button>
                     </td>
                 </tr>
             `;
@@ -44,9 +45,9 @@ function generatePagination(totalPages, currentPage) {
     // ---- « PREVIOUS BUTTON ----
     const prevLi = document.createElement("li");
     prevLi.className = "page-item " + (currentPage === 0 ? "disabled" : "");
-    prevLi.innerHTML = `<a class="page-link" href="#">«</a>`;
+    prevLi.innerHTML = `<a class="page-link" href="#">&laquo;</a>`;
     prevLi.onclick = () => {
-        if (currentPage > 0) fetchCourses(0);
+        if (currentPage > 0) fetchStudents(0);
     };
     pagination.appendChild(prevLi);
 
@@ -56,7 +57,7 @@ function generatePagination(totalPages, currentPage) {
         li.className = "page-item " + (i === currentPage ? "active" : "");
         li.innerHTML = `<a class="page-link" href="#">${i + 1}</a>`;
 
-        li.onclick = () => fetchCourses(i);
+        li.onclick = () => fetchStudents(i);
 
         pagination.appendChild(li);
     }
@@ -64,9 +65,9 @@ function generatePagination(totalPages, currentPage) {
     // ---- » NEXT BUTTON ----
     const nextLi = document.createElement("li");
     nextLi.className = "page-item " + (currentPage === totalPages ? "disabled" : "");
-    nextLi.innerHTML = `<a class="page-link" href="#">»</a>`;
+    nextLi.innerHTML = `<a class="page-link" href="#">&raquo;</a>`;
     nextLi.onclick = () => {
-        if (currentPage < totalPages) fetchCourses(totalPages - 1);
+        if (currentPage < totalPages) fetchStudents(totalPages - 1);
     };
     pagination.appendChild(nextLi);
 }
@@ -76,4 +77,4 @@ function generatePagination(totalPages, currentPage) {
 
 
 // CALL FUNCTIONS
-fetchCourses()
+fetchStudents()
