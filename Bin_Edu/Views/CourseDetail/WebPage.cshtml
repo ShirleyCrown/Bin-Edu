@@ -12,6 +12,17 @@
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
+    <!-- Splide JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/@@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+
+    <style>
+    .card-img-top {
+        height: 60%;
+    }
+    </style>
+
 </head>
 
 <body class="bg-light">
@@ -138,45 +149,15 @@
         <div class="mt-5">
             <h2 class="fw-bold mb-3">Related Courses</h2>
 
-            <div class="row g-4">
 
-                <div class="col-sm-6 col-lg-4">
-                    <div class="card shadow-sm h-100">
-                        <img class="card-img-top"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlfYDqFWiCYlJWdhXuq4ifDeKV3CaJg98WbOrGb3_JTjOX377CDMIe3cz8xgmxLNevQQ_5Nit53XvVjBJenk31Lq262nWh-tj2MSREE-FJvuXYZ1iAKQLz1UwmXa2gvaXUmZDiS_XDiIz45RK68MevnQcXAOL61uHjAmk8NmwbpXvGM7JrpYwfP85XjWna00fItBYefyEx7n0hah0aCVqrVhKwt9g1Pi9G6tAOpAsjdXvN4wgNI5KYT-Z7C9ZGedMroUXaXXeC0RA">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="fw-bold">Introduction to React</h5>
-                            <p class="text-muted">Build dynamic user interfaces with the most popular JavaScript library.</p>
-                            <button class="btn btn-outline-primary mt-auto">View Details</button>
-                        </div>
-                    </div>
+            <section class="splide" aria-label="Splide Basic HTML Example">
+                <div class="splide__track">
+                    <ul id="relatedCoursesSlider" class="splide__list">
+                        
+                    </ul>
                 </div>
+            </section>
 
-                <div class="col-sm-6 col-lg-4">
-                    <div class="card shadow-sm h-100">
-                        <img class="card-img-top"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrfGf5g1wpslpg3i92Hmq6T7ocnXbBEiQeW2fs3YsXMB5VtwO6HoWUJfbpHRxKdVo6MlcTJrnpiFhNuw1bx1YgwvWvXpfU7MGK-OIz1jN-gjmrMS3nQgNDyDMdH2uCiuDXaFapubqsoT3ktVJhtsWIap8n4PkkNvPVpBlqc0UJC7D4-E0cofFOsISrJTaiGFTBQo6TMDYvXMjgCVjhJ6QCyNpTR48nk1gTKjmiBHbbVogNjMcZ3OXzkQNW6YCycdCDUoJZHORVGIM">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="fw-bold">Node.js for Beginners</h5>
-                            <p class="text-muted">Learn to build fast and scalable server-side applications.</p>
-                            <button class="btn btn-outline-primary mt-auto">View Details</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-lg-4">
-                    <div class="card shadow-sm h-100">
-                        <img class="card-img-top"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9tTWVECFDarOX_Fef8na-qPTx4AkinzaGFnUde2pLnsSqpTkgcFHwl_Q54rPb_PzJYCOz2JT0gqOTna73O1LYHvLtdRDXVMXgxjwoP8RaRDRfP_EbDSH4JKN2DY3wkfHtwfM893dkcVmWZNJd_D8pCadCC54iuN51sNRAlvBtooIWgdf2dhQMYr0qSycSjR9y7BDzWzJ4-5vtFXoivuhtEEIVh3zK0rq3j6pn7_HVDAzN86DIYshnJ7aAHDse6SSRw84ibSrce50">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="fw-bold">Advanced CSS and Sass</h5>
-                            <p class="text-muted">Take your styling skills to the next level.</p>
-                            <button class="btn btn-outline-primary mt-auto">View Details</button>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
         </div>
 
     </div>

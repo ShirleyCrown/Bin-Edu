@@ -122,6 +122,7 @@ namespace Bin_Edu.Controllers
         )
         {
 
+            // Main course detail
             Course? query = await _context.Courses
                 .Where(c => c.Id == courseId)
                 .Select(c => new Course
@@ -172,9 +173,57 @@ namespace Bin_Edu.Controllers
             };
 
 
+            // Related courses
+            List<Course> queryCourseDetails = await _context.Courses
+                .Where(c => c.CourseSubject == query.CourseSubject)
+                .Select(c => new Course
+                {
+                    Id = c.Id,
+                    CourseTitle = c.CourseTitle,
+                    CourseDescription = c.CourseDescription,
+                    CourseSubject = c.CourseSubject,
+                    TeachingTeacherName = c.TeachingTeacherName,
+                    CoursePrice = c.CoursePrice,
+                    OpeningDate = c.OpeningDate,
+                    EndDate = c.EndDate,
+                    CourseRegistrations = c.CourseRegistrations
+                })
+                .Take(3)
+                .ToListAsync();
+
+            List<RelatedCourse> relatedCourses = new List<RelatedCourse>();
+            foreach (var queryCourseDetail in queryCourseDetails)
+            {
+
+                DateTime openingDate = queryCourseDetail.OpeningDate.ToDateTime(TimeOnly.MinValue);
+                DateTime endingDate = queryCourseDetail.EndDate.ToDateTime(TimeOnly.MinValue);
+
+                // Get difference
+                TimeSpan diffRelatedCourse = endDt - openDt;
+
+                // Full weeks
+                int relatedCourseWeeks = diffRelatedCourse.Days / 7;
+
+                RelatedCourse responseData = new RelatedCourse
+                {
+                    Id = queryCourseDetail.Id,
+                    CourseTitle = queryCourseDetail.CourseTitle,
+                    CourseDescription = queryCourseDetail.CourseDescription,
+                    CourseSubject = queryCourseDetail.CourseSubject,
+                    TeachingTeacherName = queryCourseDetail.TeachingTeacherName,
+                    CoursePrice = queryCourseDetail.CoursePrice,
+                    NumberOfStudents = queryCourseDetail.CourseRegistrations.Count,
+                    WeekDuration = weeks
+                };
+
+                relatedCourses.Add(responseData);
+            }
+
+
             GetCourseDetailResponse responseDto = new GetCourseDetailResponse
             {
-                CourseDetail = courseDetail
+                CourseDetail = courseDetail,
+                RelatedCourses = relatedCourses
             };
 
             
