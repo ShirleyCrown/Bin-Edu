@@ -400,5 +400,152 @@ namespace Bin_Edu.Controllers
         }
 
 
+
+
+        [HttpGet("admin/dashboard/course-management/get-timetables/{course_id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetTimetables(
+            [FromRoute(Name = "course_id")] int courseId
+        )
+        {
+            List<GetTimetablesAdminResponse> responseDto = await _context.CourseTimetables
+                .Where(ct => ct.CourseId == courseId)
+                .GroupBy(ct => new { ct.DayOfWeek, ct.StartTime, ct.EndTime })
+                .Select(g => new GetTimetablesAdminResponse
+                {
+                    DayOfWeek = g.Key.DayOfWeek,
+                    StartTime = g.Key.StartTime,
+                    EndTime = g.Key.EndTime
+                })
+                .ToListAsync();
+
+
+            return Json(new ApiResponse<List<GetTimetablesAdminResponse>>
+            {
+                Message = "Get course timtables successfully",
+                Data = responseDto
+            });
+        }
+
+
+        [HttpPost("admin/dashboard/course-management/create-timetable/{course_id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> CreateTimetable(
+            [FromRoute(Name = "course_id")] int courseId,
+            [FromForm] CreateTimetableAdminRequest requestDto
+        )
+        {
+
+            // Validation
+            // 1. NULL OR EMPTY VALIDATION
+            if (string.IsNullOrWhiteSpace(requestDto.DayOfWeek))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Day Of Week is required.",
+                    Message = "Day Of Week is required."
+                });
+
+            if (string.IsNullOrWhiteSpace(requestDto.StartTime))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Start time is required.",
+                    Message = "Start time is required."
+                });
+
+            if (string.IsNullOrWhiteSpace(requestDto.EndTime))
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "End time is required.",
+                    Message = "End time is required."
+                });
+
+            TimeOnly startTime = TimeOnly.Parse(requestDto.StartTime);
+            TimeOnly endTime = TimeOnly.Parse(requestDto.EndTime);
+
+            // 2. TIMETABLE UNIQUE CHECK (EF CORE)
+            bool timetableExisted = await _context.CourseTimetables
+                .AnyAsync(ct => 
+                    ct.CourseId == courseId && 
+                    ct.DayOfWeek == requestDto.DayOfWeek && 
+                    ct.StartTime == startTime && 
+                    ct.EndTime == endTime
+                );
+
+            if (timetableExisted)
+                return BadRequest(new ApiResponse<dynamic>
+                {
+                    Data = "Timetable already exists.",
+                    Message = "Timetable already exists."
+                });
+            
+
+            Course? course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == courseId);
+            DayOfWeek dayOfWeek = 
+                requestDto.DayOfWeek == "Monday"    ? DayOfWeek.Monday :
+                requestDto.DayOfWeek == "Tuesday"   ? DayOfWeek.Tuesday :
+                requestDto.DayOfWeek == "Wednesday" ? DayOfWeek.Wednesday :
+                requestDto.DayOfWeek == "Thursday"  ? DayOfWeek.Thursday :
+                requestDto.DayOfWeek == "Friday"    ? DayOfWeek.Friday :
+                requestDto.DayOfWeek == "Saturday"  ? DayOfWeek.Saturday :
+                DayOfWeek.Sunday;
+
+            List<DateOnly> courseStartDates = this.GetDatesByDayOfWeek(course.OpeningDate, course.EndDate, dayOfWeek);
+
+
+            List<CourseTimetable> courseTimetables = new List<CourseTimetable>();
+
+            foreach (var courseStartDate in courseStartDates)
+            {
+                CourseTimetable courseTimetable = new CourseTimetable
+                {
+                    CourseId = course.Id,
+                    DayOfWeek = requestDto.DayOfWeek,
+                    StartDate = courseStartDate,
+                    StartTime = TimeOnly.Parse(requestDto.StartTime),
+                    EndTime = TimeOnly.Parse(requestDto.EndTime),
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                courseTimetables.Add(courseTimetable);
+            }
+
+
+            await _context.CourseTimetables.AddRangeAsync(courseTimetables);
+            await _context.SaveChangesAsync();
+
+
+            return Json(new ApiResponse<dynamic>
+            {
+                Data = "admin/dashboard/course-management",
+                Message = "Course timetable created successfully."
+            });
+        }
+
+
+
+
+        // ========== PRIVATE METHODS ==============
+        private List<DateOnly> GetDatesByDayOfWeek(DateOnly start, DateOnly end, DayOfWeek targetDay)
+        {
+            var result = new List<DateOnly>();
+
+            // Move start forward to the first matching day
+            int daysToAdd = ((int)targetDay - (int)start.DayOfWeek + 7) % 7;
+            var firstMatch = start.AddDays(daysToAdd);
+
+            // If the first matching day is after end date, return empty
+            if (firstMatch > end)
+                return result;
+
+            // Add weekly occurrences
+            for (var date = firstMatch; date <= end; date = date.AddDays(7))
+            {
+                result.Add(date);
+            }
+
+            return result;
+        }
+
     }
 }

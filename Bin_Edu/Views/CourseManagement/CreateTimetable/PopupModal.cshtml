@@ -1,0 +1,51 @@
+<div class="modal fade" id="createTimetableModal" tabindex="-1" aria-labelledby="createTimetableModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createTimetableModalLabel">Create new timetable</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                 <!-- ERROR ALERT -->
+                <div class="d-none alert alert-danger create-timetable-alert-danger d-flex align-items-center" role="alert">
+                    <span class="material-symbols-outlined me-2">error</span>
+                    <div id="createTimetableErrorMessage">
+                        
+                    </div>
+                </div>
+
+                <!-- FORM -->
+                <form id="createTimetableForm">
+                    <div class="mb-3">
+                        <label for="DayOfWeek" class="col-form-label">Subject:</label>
+                        <select class="form-select" id="DayOfWeek" name="DayOfWeek" aria-label="Day of Week select">
+                            <option value="" selected>Select day of week</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="StartTime" class="col-form-label">Start Time:</label>
+                        <input type="time" class="form-control" id="StartTime" name="StartTime">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="EndTime" class="col-form-label">End Time:</label>
+                        <input type="time" class="form-control" id="EndTime" name="EndTime">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createTimetable()">Create</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -45,7 +45,7 @@ async function fetchCourses(page = 0) {
                                 |
                                 <span class="material-symbols-outlined mx-2"> price_change </span> ${responseData.courses[i].coursePrice} VND
                             </p>
-                            <a href="#" class="btn btn-outline-primary mt-auto">View Details</a>
+                            <a href="/course-detail/${responseData.courses[i].id}" class="btn btn-outline-primary mt-auto">View Details</a>
                         </div>
                     </div>
                 </div>
