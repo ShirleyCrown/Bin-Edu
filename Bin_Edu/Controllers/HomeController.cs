@@ -105,5 +105,86 @@ namespace Bin_Edu.Controllers
         }
 
 
+        [HttpGet("course-detail/{course_id}")]
+        public IActionResult GetCourseDetailPage(
+            [FromRoute(Name = "course_id")] int courseId
+        )
+        {
+
+            ViewBag.CourseId = courseId;
+            
+            return View("~/Views/CourseDetail/WebPage.cshtml");
+        }
+
+        [HttpGet("get-course-detail/{course_id}")]
+        public async Task<IActionResult> HandleGetCourseDetail(
+            [FromRoute(Name = "course_id")] int courseId
+        )
+        {
+
+            Course? query = await _context.Courses
+                .Where(c => c.Id == courseId)
+                .Select(c => new Course
+                {
+                    Id = c.Id,
+                    CourseTitle = c.CourseTitle,
+                    CourseDescription = c.CourseDescription,
+                    TeachingTeacherName = c.TeachingTeacherName,
+                    CoursePrice = c.CoursePrice,
+                    CourseSubject = c.CourseSubject,
+                    CourseRegistrations = c.CourseRegistrations,
+                    CourseTimetables = c.CourseTimetables,
+                    OpeningDate = c.OpeningDate,
+                    EndDate = c.EndDate
+                })
+                .FirstOrDefaultAsync();
+
+
+            DateTime openDt = query.OpeningDate.ToDateTime(TimeOnly.MinValue);
+            DateTime endDt = query.EndDate.ToDateTime(TimeOnly.MinValue);
+
+            // Get difference
+            TimeSpan diff = endDt - openDt;
+
+            // Full weeks
+            int weeks = diff.Days / 7;
+
+
+            CourseDetail courseDetail = new CourseDetail
+            {
+                Id = query.Id,
+                CourseTitle = query.CourseTitle,
+                CourseDescription = query.CourseDescription,
+                CourseSubject = query.CourseSubject,
+                TeachingTeacherName = query.TeachingTeacherName,
+                CoursePrice = query.CoursePrice,
+                NumberOfStudents = query.CourseRegistrations.Count,
+                WeekDuration = weeks,
+                Timetables = query.CourseTimetables
+                    .GroupBy(ct => new {ct.DayOfWeek, ct.StartTime, ct.EndTime})
+                    .Select(g => new CourseTimetableDetail
+                    {
+                        DayOfWeek = g.Key.DayOfWeek,
+                        StartTime = g.Key.StartTime,
+                        EndTime = g.Key.EndTime
+                    })
+                    .ToList()
+            };
+
+
+            GetCourseDetailResponse responseDto = new GetCourseDetailResponse
+            {
+                CourseDetail = courseDetail
+            };
+
+            
+            return Json(new ApiResponse<GetCourseDetailResponse>
+            {
+                Message = "Get course detail successfully",
+                Data = responseDto
+            });
+        }
+
+
     }
 }
