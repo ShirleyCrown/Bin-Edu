@@ -273,13 +273,64 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                 }
             };
 
+
+            foreach (var course in courses)
+            {
+
+                course.CourseTimetables = new List<CourseTimetable>();
+
+                List<DateOnly> courseStartDates = this
+                    .GetDatesByDayOfWeek(course.OpeningDate, course.EndDate, DayOfWeek.Monday);
+
+                foreach (var courseStartDate in courseStartDates)
+                {        
+                    CourseTimetable courseTimetable = new CourseTimetable
+                    {
+                        StartTime = TimeOnly.Parse("08:00:00"),
+                        EndTime = TimeOnly.Parse("11:00:00"),
+                        DayOfWeek = "Monday",
+                        StartDate = courseStartDate,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    };
+
+                    course.CourseTimetables.Add(courseTimetable);
+                }
+
+            }
+
+
             await _context.Courses.AddRangeAsync(courses);
             await _context.SaveChangesAsync();
 
-            Console.WriteLine("Courses generated.");
+            Console.WriteLine("Courses + Timetables generated.");
 
         }
 
+
+
+
+        // ========== PRIVATE METHODS ==============
+        private List<DateOnly> GetDatesByDayOfWeek(DateOnly start, DateOnly end, DayOfWeek targetDay)
+        {
+            var result = new List<DateOnly>();
+
+            // Move start forward to the first matching day
+            int daysToAdd = ((int)targetDay - (int)start.DayOfWeek + 7) % 7;
+            var firstMatch = start.AddDays(daysToAdd);
+
+            // If the first matching day is after end date, return empty
+            if (firstMatch > end)
+                return result;
+
+            // Add weekly occurrences
+            for (var date = firstMatch; date <= end; date = date.AddDays(7))
+            {
+                result.Add(date);
+            }
+
+            return result;
+        }
 
     }
 }

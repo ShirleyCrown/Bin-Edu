@@ -56,8 +56,8 @@ namespace Bin_Edu.Controllers
                     EndDate = c.EndDate,
                     CourseRegistrations = c.CourseRegistrations
                 })
-                .Skip(page * 10)
-                .Take(10)
+                .Skip(page * 9)
+                .Take(9)
                 .ToListAsync();
 
             List<GetCoursesResponse> responseDto = new List<GetCoursesResponse>();
@@ -90,7 +90,7 @@ namespace Bin_Edu.Controllers
 
             int totalPages = await _context.Courses.CountAsync();
 
-            totalPages = (int) Math.Ceiling((double) totalPages / 10);
+            totalPages = (int) Math.Ceiling((double) totalPages / 9);
 
             return Json(new ApiResponse<dynamic>
             {
@@ -175,7 +175,10 @@ namespace Bin_Edu.Controllers
 
             // Related courses
             List<Course> queryCourseDetails = await _context.Courses
-                .Where(c => c.CourseSubject == query.CourseSubject)
+                .Where(c => 
+                    c.Id != courseId && 
+                    c.CourseSubject == query.CourseSubject
+                )
                 .Select(c => new Course
                 {
                     Id = c.Id,
