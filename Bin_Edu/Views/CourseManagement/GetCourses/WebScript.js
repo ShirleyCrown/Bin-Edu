@@ -47,34 +47,36 @@ function generatePagination(totalPages, currentPage) {
     const pagination = document.getElementById("pagination");
     pagination.innerHTML = "";
 
-    // ---- « PREVIOUS BUTTON ----
-    const prevLi = document.createElement("li");
-    prevLi.className = "page-item " + (currentPage === 0 ? "disabled" : "");
-    prevLi.innerHTML = `<a class="page-link" href="#">«</a>`;
-    prevLi.onclick = () => {
-        if (currentPage > 0) fetchCourses(0);
-    };
-    pagination.appendChild(prevLi);
-
-    // ---- PAGE NUMBERS ----
-    for (let i = 0; i < totalPages; i++) {
-        const li = document.createElement("li");
-        li.className = "page-item " + (i === currentPage ? "active" : "");
-        li.innerHTML = `<a class="page-link" href="#">${i + 1}</a>`;
-
-        li.onclick = () => fetchCourses(i);
-
-        pagination.appendChild(li);
+    if (totalPages > 1) {
+        // ---- « PREVIOUS BUTTON ----
+        const prevLi = document.createElement("li");
+        prevLi.className = "page-item " + (currentPage === 0 ? "disabled" : "");
+        prevLi.innerHTML = `<a class="page-link" href="#">«</a>`;
+        prevLi.onclick = () => {
+            if (currentPage > 0) fetchCourses(0);
+        };
+        pagination.appendChild(prevLi);
+    
+        // ---- PAGE NUMBERS ----
+        for (let i = 0; i < totalPages; i++) {
+            const li = document.createElement("li");
+            li.className = "page-item " + (i === currentPage ? "active" : "");
+            li.innerHTML = `<a class="page-link" href="#">${i + 1}</a>`;
+    
+            li.onclick = () => fetchCourses(i);
+    
+            pagination.appendChild(li);
+        }
+    
+        // ---- » NEXT BUTTON ----
+        const nextLi = document.createElement("li");
+        nextLi.className = "page-item " + (currentPage === totalPages ? "disabled" : "");
+        nextLi.innerHTML = `<a class="page-link" href="#">»</a>`;
+        nextLi.onclick = () => {
+            if (currentPage < totalPages) fetchCourses(totalPages - 1);
+        };
+        pagination.appendChild(nextLi);
     }
-
-    // ---- » NEXT BUTTON ----
-    const nextLi = document.createElement("li");
-    nextLi.className = "page-item " + (currentPage === totalPages ? "disabled" : "");
-    nextLi.innerHTML = `<a class="page-link" href="#">»</a>`;
-    nextLi.onclick = () => {
-        if (currentPage < totalPages) fetchCourses(totalPages - 1);
-    };
-    pagination.appendChild(nextLi);
 }
 
 

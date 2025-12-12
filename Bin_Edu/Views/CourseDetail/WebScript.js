@@ -2,6 +2,9 @@
 
 function initRelatedCourseSection() {
     new Splide( '.splide', {
+        type    : 'loop',
+        autoplay: true,
+        interval: 4000,
         perPage: 2,
         fixedHeight: "35rem",
         gap: "5rem",
