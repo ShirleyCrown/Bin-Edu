@@ -238,5 +238,13 @@ namespace Bin_Edu.Controllers
         }
 
 
+        [HttpGet("course-timetable")]
+        public IActionResult GetCourseTimetablePage()
+        {
+            
+            return View("~/Views/CourseTimetable/WebPage.cshtml");
+        }
+
+
     }
 }

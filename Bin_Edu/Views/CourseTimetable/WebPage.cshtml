@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Course Timetable (Bootstrap Version)</title>
+
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom left-border course card colors -->
+    <style>
+        .course-card {
+            border-left-width: 6px;
+            border-left-style: solid;
+            background: rgba(0, 0, 0, 0.03);
+            height: 100%;
+        }
+
+        .border-orange { border-left-color: #f57c00 !important; }
+        .border-green { border-left-color: #388e3c !important; }
+        .border-blue { border-left-color: #1976d2 !important; }
+        .border-purple { border-left-color: #7b1fa2 !important; }
+        .border-rose { border-left-color: #d81b60 !important; }
+
+
+        .timetable-wrapper {
+            width: 100%;
+        }
+
+        /* Header row */
+        .timetable-day-header {
+            display: flex;
+            width: 100%;
+            background: white;
+            border-bottom: 1px solid #ccc;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        /* Each header cell */
+        .day-label {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            font-weight: 600;
+            border-right: 1px solid #eee;
+        }
+
+        .day-label:first-child {
+            width: 70px; /* align with hour column */
+            flex: none;
+            border-right: 1px solid #ccc;
+            background: #fafafa;
+        }
+
+        .timetable-container {
+            display: flex;
+            width: 100%;
+            height: 700px;
+            overflow-y: scroll;
+            position: relative;
+        }
+
+        .timetable-hours {
+            width: 70px;
+            border-right: 1px solid #ccc;
+            position: relative;
+        }
+
+        .hour {
+            height: 60px;        /* 60px = 1 hour → 1px per minute */
+            font-size: 12px;
+            color: #444;
+        }
+
+        .timetable {
+            display: flex;
+            flex: 1;
+        }
+
+        .day-column {
+            flex: 1;
+            border-right: 1px solid #eee;
+            position: relative;
+        }
+
+        .event {
+            position: absolute;
+            left: 5px;
+            right: 5px;
+            border-left: 6px solid #1976d2;
+            background: rgba(25, 118, 210, 0.12);
+            padding: 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+
+        .course-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .2);
+            transition: 0.2s;
+        }
+    </style>
+
+</head>
+
+<body class="bg-light">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg bg-white border-bottom">
+        <div class="container">
+
+            <a class="navbar-brand fw-bold" href="#">
+                <span class="text-primary">Offline Course System</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div id="navbarNav" class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav me-3">
+                    <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link active text-primary" href="#">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Grades</a></li>
+                </ul>
+
+                <button class="btn btn-outline-secondary rounded-circle me-3">
+                    <i class="bi bi-bell"></i>
+                </button>
+
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6IKnrwToHN7-FMmS82LI3LnYpLF0Fbs7Sk8geoWY_TAmLWY29qO7V_hf2a7E3T8ziFpbeKqw9IvB9-WOJT1Wkk4iKDbzYOgdomUDUBdljX5MGtI1MeEJQszV7FhG6sVAgXs0hSKvD1hqot-T7IoR7McDiAglduqFRAsoT6Vh9Ys1Wj3ku056T69KUEbhIN3lGvtzpAWBKCQNNDLesLgilFbJLrddOjtG9RoXR_VS1caVwXQoR2g6pNZLc3z6Fd63JdnMwVsYvYY4"
+                    class="rounded-circle" width="40" height="40" />
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container py-4">
+
+        <div class="d-flex flex-column flex-sm-row align-items-start justify-content-between mb-4">
+            <h1 class="fw-bold">Course Timetable</h1>
+
+        </div>
+
+        <!-- FILTER BAR -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center border-top border-bottom py-3 mb-4">
+
+            <div class="d-flex gap-2 w-100">
+
+                <div class="input-group w-50">
+                    <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" placeholder="Search courses, instructors...">
+                </div>
+
+
+                <button class="btn btn-outline-secondary d-none d-sm-block">
+                    <i class="bi bi-filter"></i> Filters
+                </button>
+
+            </div>
+
+            <div class="mt-3 mt-md-0 d-flex align-items-center gap-3">
+                <button class="btn btn-primary">Today</button>
+
+            </div>
+        </div>
+
+        <!-- TIMETABLE -->
+        <div class="table-responsive">
+
+            <div class="timetable-wrapper">
+
+                <!-- DAY HEADER ROW -->
+                <div class="timetable-day-header">
+                    <div class="day-label"></div> <!-- empty for hour column -->
+                    <div class="day-label">Monday</div>
+                    <div class="day-label">Tuesday</div>
+                    <div class="day-label">Wednesday</div>
+                    <div class="day-label">Thursday</div>
+                    <div class="day-label">Friday</div>
+                    <div class="day-label">Saturday</div>
+                    <div class="day-label">Sunday</div>
+                </div>
+
+                <div class="timetable-container">
+                    <div class="timetable-hours">
+                        <!-- Hour markers -->
+                        <div class="hour">07:00</div>
+                        <div class="hour">08:00</div>
+                        <div class="hour">09:00</div>
+                        <div class="hour">10:00</div>
+                        <div class="hour">11:00</div>
+                        <div class="hour">12:00</div>
+                        <div class="hour">13:00</div>
+                        <div class="hour">14:00</div>
+                        <div class="hour">15:00</div>
+                        <div class="hour">16:00</div>
+                        <div class="hour">17:00</div>
+                        <div class="hour">18:00</div>
+                    </div>
+
+                    <div class="timetable">
+                        <div class="day-column" id="monday"></div>
+                        <div class="day-column" id="tuesday"></div>
+                        <div class="day-column" id="wednesday"></div>
+                        <div class="day-column" id="thursday"></div>
+                        <div class="day-column" id="friday"></div>
+                        <div class="day-column" id="saturday"></div>
+                        <div class="day-column" id="sunday"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script>
+
+        function addEvent(dayId, title, instructor, room, startTime, endTime, color) {
+
+            // Convert "HH:MM" → minutes since start of day (07:00 = 0)
+            const base = 7 * 60;
+            const toMinutes = t => {
+                const [h, m] = t.split(":").map(Number);
+                return h * 60 + m;
+            };
+
+            const start = toMinutes(startTime) - base;
+            const end = toMinutes(endTime) - base;
+            const duration = end - start;
+
+            const event = document.createElement("div");
+            event.className = "event";
+            event.style.top = start + "px";
+            event.style.height = duration + "px";
+            event.style.borderLeftColor = color;
+
+            event.innerHTML = `
+                <strong>${title}</strong><br>
+                <small>${instructor}</small><br>
+                <small>${room}</small><br>
+                <small>${startTime} - ${endTime}</small>
+            `;
+
+            document.getElementById(dayId).appendChild(event);
+        }
+
+
+        addEvent(
+            "tuesday",
+            "Web Development",
+            "Prof. Ada Lovelace",
+            "Lab 5B",
+            "11:00",
+            "13:30",
+            "#1976d2"
+        );
+
+        addEvent(
+            "monday",
+            "Algorithms",
+            "Dr. Alan Turing",
+            "Room 201",
+            "08:17",
+            "11:55",
+            "#f57c00"
+        );
+
+        addEvent(
+            "friday",
+            "AI Fundamentals",
+            "Andrew Ng",
+            "Auditorium",
+            "09:45",
+            "11:15",
+            "#388e3c"
+        );
+        </script>
+
+
+</body>
+</html>
