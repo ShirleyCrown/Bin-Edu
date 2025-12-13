@@ -6,7 +6,7 @@ function initRelatedCourseSection() {
         autoplay: true,
         interval: 4000,
         perPage: 2,
-        fixedHeight: "35rem",
+        fixedHeight: "27rem",
         gap: "5rem",
         arrows: false,
         pagination: false
@@ -107,7 +107,9 @@ async function fetchCourseDetail() {
 
 }
 
-
+async function registerCourse() {
+    
+}
 
 
 

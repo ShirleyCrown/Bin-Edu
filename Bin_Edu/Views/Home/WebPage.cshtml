@@ -1,127 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
+@{
+    Layout = "~/Views/Layouts/StudentLayout/LAyoutPage.cshtml";
+}
 
-<head>
-    <meta charset="utf-8" />
-    <title>Home Page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap 5.3 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
-
-    <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: "Lexend", sans-serif;
-            background-color: #f6f7f8;
-        }
-
-        .course-card img {
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .bg-primary-custom {
-            background-color: #137fec;
-        }
-
-        .text-primary-custom {
-            color: #137fec;
-        }
-    </style>
-</head>
-
-<body>
-
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg bg-white shadow-sm mb-4">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Bin Edu</a>
-
-            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse justify-content-end" id="navMenu">
-                <ul class="navbar-nav me-3">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    @if (User.Identity.IsAuthenticated) {
-                        <li class="nav-item"><a class="nav-link" href="#">My Courses</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
-                    }
-                </ul>
-                @if (User.Identity.IsAuthenticated) {
-                    <button class="btn btn-primary" onclick="logoutStudent()">Log Out</button>
-                } 
-                else {
-                    <a href="/student/login" class="btn btn-primary">Log In</a>
-                }
-            </div>
+<!-- SEARCH + FILTER -->
+<div class="container mb-4">
+    <div class="row g-3 align-items-center">
+        <div class="col-md-6">
+            <input type="text" class="form-control" placeholder="Search for a course by name...">
         </div>
-    </nav>
-
-    <!-- PAGE HEADER -->
-    <div class="container mb-4">
-        <h1 class="fw-bold display-6">Available Courses</h1>
-        <p class="text-muted">Explore our wide range of courses and find the perfect one for you.</p>
-    </div>
-
-    <!-- SEARCH + FILTER -->
-    <div class="container mb-4">
-        <div class="row g-3 align-items-center">
-            <div class="col-md-6">
-                <input type="text" class="form-control" placeholder="Search for a course by name...">
-            </div>
-            <div class="col-md-6 text-md-end">
-                <button class="btn btn-outline-secondary me-2">All</button>
-                <button class="btn btn-outline-secondary me-2">Technology</button>
-                <button class="btn btn-outline-secondary me-2">Arts</button>
-                <button class="btn btn-outline-secondary">Business</button>
-            </div>
+        <div class="col-md-6 text-md-end">
+            <button class="btn btn-outline-secondary me-2">All</button>
+            <button class="btn btn-outline-secondary me-2">Technology</button>
+            <button class="btn btn-outline-secondary me-2">Arts</button>
+            <button class="btn btn-outline-secondary">Business</button>
         </div>
     </div>
+</div>
 
-    <!-- COURSE GRID -->
-    <div class="container">
-        <div id="courseGrid" class="row g-4">
+<!-- COURSE GRID -->
+<div class="container">
+    <div id="courseGrid" class="row g-4">
 
 
-        </div>
-
-        <!-- PAGINATION -->
-        <div class="card-footer d-flex justify-content-center">
-            <nav>
-                <ul class="pagination mb-0" id="pagination">
-                
-                </ul>
-            </nav>
-        </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="mt-5 py-4 border-top text-center">
-        <p class="mb-1 text-muted">© 2024 Course System. All Rights Reserved.</p>
-        <a href="#" class="text-muted me-3">About</a>
-        <a href="#" class="text-muted me-3">Contact</a>
-        <a href="#" class="text-muted">Privacy Policy</a>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Axios -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-
-    <script src="/static/Home/WebScript.js"></script>
+    <!-- PAGINATION -->
+    <div class="card-footer d-flex justify-content-center">
+        <nav>
+            <ul class="pagination mb-0" id="pagination">
+            
+            </ul>
+        </nav>
+    </div>
+</div>
 
 
 
-</body>
-
-</html>
+<script src="/static/Home/WebScript.js"></script>
