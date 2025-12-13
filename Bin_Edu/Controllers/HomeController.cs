@@ -2,15 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Bin_Edu.Controllers.ResponseDto;
 using Bin_Edu.Infrastructure;
 using Bin_Edu.Infrastructure.Api;
 using Bin_Edu.Infrastructure.Database.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Student_Science_Research_Management_UEF.Infrastructure.Mail;
 
 namespace Bin_Edu.Controllers
 {
@@ -18,14 +21,17 @@ namespace Bin_Edu.Controllers
     {
 
         private readonly AppDBContext _context;
+        private readonly IEmailService _emailService;
 
 
 
         public HomeController(
-            AppDBContext context
+            AppDBContext context,
+            IEmailService emailService
         )
         {
             _context = context;
+            _emailService = emailService;
         }
        
        
@@ -229,12 +235,151 @@ namespace Bin_Edu.Controllers
                 RelatedCourses = relatedCourses
             };
 
+
+            if (User.Identity.IsAuthenticated)
+            {                
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isCourseRegistered = await _context.CourseRegistrations
+                    .AnyAsync(cr => 
+                        cr.CourseId == courseId && 
+                        cr.StudentId == userId
+                    );
+
+                ViewBag.IsCourseRegistered = isCourseRegistered;
+            }
+
             
             return Json(new ApiResponse<GetCourseDetailResponse>
             {
                 Message = "Get course detail successfully",
                 Data = responseDto
             });
+        }
+
+
+
+        [HttpPost("register-course/{course_id}")]
+        [Authorize]
+        public async Task<IActionResult> HandleRegisterCourse(
+            [FromRoute(Name = "course_id")] int courseId
+        )
+        {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+
+            Course? query = await _context.Courses
+                .Include(c => c.CourseTimetables)
+                .FirstOrDefaultAsync(c => c.Id == courseId);
+
+            bool isCourseRegistered = await _context.CourseRegistrations
+                .AnyAsync(cr => cr.CourseId == courseId && cr.StudentId == userId);
+
+            if (isCourseRegistered)
+            {
+                return Redirect("/");
+            }
+
+            CourseRegistration courseRegistration = new CourseRegistration
+            {
+                CourseId = query.Id,
+                StudentId = userId,
+                RegisteredAt = DateTime.UtcNow
+            };
+
+            await _context.CourseRegistrations.AddAsync(courseRegistration);
+            await _context.SaveChangesAsync();
+
+
+            string htmlEmail = @"
+                <!DOCTYPE html>
+                <html lang='en'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <title>Register Course Email</title>
+                </head>
+                <body style='margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;'>
+                    <table role='presentation' style='width: 100%; border-collapse: collapse;'>
+                        <tr>
+                            <td style='padding: 40px 0;'>
+                                <table role='presentation' style='width: 600px; margin: 0 auto; background-color: #ffffff; border-collapse: collapse; box-shadow: 0 4px 6px rgba(0,0,0,0.1);'>
+                                    <!-- Header -->
+                                    <tr>
+                                        <td style='background-color: #0d6efd; padding: 40px 30px; text-align: center;'>
+                                            <h1 style='margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;'>Bin Edu</h1>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Main Content -->
+                                    <tr>
+                                        <td style='padding: 40px 30px;'>
+                                            <h2 style='margin: 0 0 20px 0; color: #333333; font-size: 24px;'>Than you for registering our course</h2>
+                                            <p style='margin: 0 0 15px 0; color: #666666; font-size: 16px; line-height: 1.6;'>
+                                                Thank you for registering our course, this help us earn lots of money from your.
+                                            </p>
+                                            <p style='margin: 0 0 25px 0; color: #666666; font-size: 16px; line-height: 1.6;'>
+                                                To go into your course, please click to a link below.
+                                            </p>
+                                            
+                                            <!-- Button -->
+                                            <table role='presentation' style='margin: 0 auto;'>
+                                                <tr>
+                                                    <td style='text-align: center; padding: 20px 0;'>
+                                                        <a href='/my-courses' target='_blank' style='background-color: #0d6efd; color: #ffffff; padding: 14px 40px; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold; display: inline-block;'>View my courses</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            
+                                            <p style='margin: 25px 0 0 0; color: #666666; font-size: 16px; line-height: 1.6;'>
+                                                If you have any questions, feel free to reply to this email. We're here to help!
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>
+            ";
+            
+            _emailService.SendEmailAsync(userEmail, "Register course successfully", htmlEmail);
+
+
+            DateTime openDt = query.OpeningDate.ToDateTime(TimeOnly.MinValue);
+            DateTime endDt = query.EndDate.ToDateTime(TimeOnly.MinValue);
+
+            // Get difference
+            TimeSpan diff = endDt - openDt;
+
+            // Full weeks
+            int weeks = diff.Days / 7;
+
+            CourseDetail courseDetail = new CourseDetail
+            {
+                Id = query.Id,
+                CourseTitle = query.CourseTitle,
+                CourseDescription = query.CourseDescription,
+                CourseSubject = query.CourseSubject,
+                TeachingTeacherName = query.TeachingTeacherName,
+                CoursePrice = query.CoursePrice,
+                NumberOfStudents = query.CourseRegistrations.Count,
+                WeekDuration = weeks,
+                Timetables = query.CourseTimetables
+                    .GroupBy(ct => new {ct.DayOfWeek, ct.StartTime, ct.EndTime})
+                    .Select(g => new CourseTimetableDetail
+                    {
+                        DayOfWeek = g.Key.DayOfWeek,
+                        StartTime = g.Key.StartTime,
+                        EndTime = g.Key.EndTime
+                    })
+                    .ToList()
+            };
+
+            
+            return View("~/Views/RegisterCourse/WebPage.cshtml", courseDetail);
         }
 
 
