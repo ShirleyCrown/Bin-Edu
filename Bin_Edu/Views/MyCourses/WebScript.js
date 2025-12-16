@@ -63,10 +63,10 @@ async function fetchMyCourses(page = 0) {
 
                         
                             <div class="gap-2 d-flex mt-3">
-                                <button class="btn btn-outline-secondary w-100">
+                                <a href="/my-courses/${responseData.myCourses[i].id}/timetable" class="btn btn-outline-secondary w-100">
                                     <span class="material-symbols-outlined fs-6 align-middle">calendar_today</span>
                                     Timetable
-                                </button>
+                                </a>
                                 <button class="btn btn-primary w-100">
                                     Details
                                 </button>
