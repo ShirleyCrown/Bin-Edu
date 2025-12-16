@@ -1,13 +1,3 @@
-async function logoutStudent() {
-    try {
-        const response = await axios.post('/student/logout');
-
-        window.location.href = response.data.data;
-
-    } catch (error) {
-        console.error('Error during logout:', error);
-    }
-}
 
 
 async function fetchCourses(page = 0) {
