@@ -26,6 +26,7 @@ async function fetchCourses(page = 0) {
                     <td>${responseData.courses[i].weekDuration}</td>
                     <td>${responseData.courses[i].numberOfStudents}</td>
                     <td>
+                        <button class="btn btn-sm btn-light text-warning" onclick="initCourseSessionsModal(${responseData.courses[i].id})"><i class="bi bi-calendar-check"></i></button>
                         <button class="btn btn-sm btn-light text-primary" onclick="initTimetablesModal(${responseData.courses[i].id})"><i class="bi bi-calendar-range"></i></button>
                         <button class="btn btn-sm btn-light text-primary" onclick="initCreateTimetableModal(${responseData.courses[i].id})"><i class="bi bi-calendar-plus"></i></button>
                         <button class="btn btn-sm btn-light" onclick="initUpdateModal(${responseData.courses[i].id})"><i class="bi bi-pencil"></i></button>
