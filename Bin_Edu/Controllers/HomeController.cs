@@ -470,11 +470,52 @@ namespace Bin_Edu.Controllers
 
 
 
-        [HttpGet("course-timetable")]
-        public IActionResult GetCourseTimetablePage()
+        [HttpGet("my-courses/{course_id}/timetable")]
+        public IActionResult GetCourseTimetablePage(
+            [FromRoute(Name = "course_id")] int courseId
+        )
         {
+
+            ViewBag.CourseId = courseId;
             
             return View("~/Views/CourseTimetable/WebPage.cshtml");
+        }
+
+        [HttpGet("get-my-course-timetable/{course_id}")]
+        public async Task<IActionResult> HandleMyCourseTimetable(
+            [FromRoute(Name = "course_id")] int courseId,
+            [FromQuery(Name = "selected_date")] string selectedDate
+        )
+        {
+
+            DateOnly parsedSelectedDate = DateOnly.Parse(selectedDate);
+
+            GetMyCourseTimetableResponse? responseDto = await _context.Courses
+                .Where(c => 
+                    c.Id == courseId
+                )
+                .Select(c => new GetMyCourseTimetableResponse
+                {
+                    CourseTitle = c.CourseTitle,
+                    TeachingTeacherName = c.TeachingTeacherName,
+                    Timetables = c.CourseTimetables
+                        .Where(ct => ct.StartDate == parsedSelectedDate)
+                        .Select(ct => new CourseTimetableDetail
+                        {
+                            DayOfWeek = ct.DayOfWeek,
+                            StartTime = ct.StartTime,
+                            EndTime = ct.EndTime
+                        })
+                        .ToList()
+                })
+                .FirstOrDefaultAsync();
+
+
+            return Json(new ApiResponse<GetMyCourseTimetableResponse>
+            {
+                Message = "Get my course timetable successfully",
+                Data = responseDto
+            });
         }
 
 
