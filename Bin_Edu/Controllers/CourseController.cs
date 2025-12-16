@@ -523,6 +523,33 @@ namespace Bin_Edu.Controllers
         }
 
 
+        
+        [HttpGet("admin/dashboard/course-management/get-course-sessions/{course_id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetCourseSessions(
+            [FromRoute(Name = "course_id")] int courseId
+        )
+        {
+            List<GetCourseSessionsAdminResponse> responseDto = await _context.CourseTimetables
+                .Where(ct => ct.CourseId == courseId)
+                .Select(ct => new GetCourseSessionsAdminResponse
+                {
+                    Id = ct.Id,
+                    DayOfWeek = ct.DayOfWeek,
+                    StartDate = ct.StartDate,
+                    StartTime = ct.StartTime,
+                    EndTime = ct.EndTime
+                })
+                .ToListAsync();
+
+
+            return Json(new ApiResponse<List<GetCourseSessionsAdminResponse>>
+            {
+                Message = "Get course sessions successfully",
+                Data = responseDto
+            });
+        }
+
 
 
         // ========== PRIVATE METHODS ==============

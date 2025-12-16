@@ -78,6 +78,9 @@
 
 
 
+@await Html.PartialAsync("~/Views/CourseManagement/GetCourseSessions/PopupModal.cshtml")
+@await Html.PartialAsync("~/Views/CourseManagement/ShowAttendanceQr/PopupModal.cshtml")
+
 @await Html.PartialAsync("~/Views/CourseManagement/GetTimetables/PopupModal.cshtml")
 @await Html.PartialAsync("~/Views/CourseManagement/CreateTimetable/PopupModal.cshtml")
 
@@ -87,10 +90,14 @@
 
 
 
-<script src="/static/CourseManagement/GetCourses/WebScript.js"></script>
+
+<script src="/static/CourseManagement/GetCourseSessions/PopupScript.js"></script>
+<script src="/static/CourseManagement/ShowAttendanceQr/PopupScript.js"></script>
+
 <script src="/static/CourseManagement/GetTimetables/PopupScript.js"></script>
 <script src="/static/CourseManagement/CreateTimetable/PopupScript.js"></script>
 
+<script src="/static/CourseManagement/GetCourses/WebScript.js"></script>
 <script src="/static/CourseManagement/CreateCourse/PopupScript.js"></script>
 <script src="/static/CourseManagement/UpdateCourse/PopupScript.js"></script>
 <script src="/static/CourseManagement/DeleteCourse/PopupScript.js"></script>
