@@ -383,6 +383,93 @@ namespace Bin_Edu.Controllers
         }
 
 
+        [HttpGet("my-courses")]
+        public IActionResult GetMyCoursesPage()
+        {
+            
+            return View("~/Views/MyCourses/WebPage.cshtml");
+        }
+
+        [HttpGet("get-my-courses")]
+        public async Task<IActionResult> HandleGetMyCourses(
+            [FromQuery(Name = "page")] int page 
+        )
+        {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            List<Course> query = await _context.CourseRegistrations
+                .Where(cr => cr.StudentId == userId)
+                .Select(cr => new Course
+                {
+                    Id = cr.Course.Id,
+                    CourseTitle = cr.Course.CourseTitle,
+                    CourseSubject = cr.Course.CourseSubject,
+                    TeachingTeacherName = cr.Course.TeachingTeacherName,
+                    CourseTimetables = cr.Course.CourseTimetables,
+                    OpeningDate = cr.Course.OpeningDate,
+                    EndDate = cr.Course.EndDate
+                })
+                .Skip(page * 9)
+                .Take(9)
+                .ToListAsync();
+
+            
+            List<MyCourses> myCourses = new List<MyCourses>();
+
+            foreach (var queryData in query)
+            {
+                DateTime openDt = queryData.OpeningDate.ToDateTime(TimeOnly.MinValue);
+                DateTime endDt = queryData.EndDate.ToDateTime(TimeOnly.MinValue);
+
+                // Get difference
+                TimeSpan diff = endDt - openDt;
+
+                // Full weeks
+                int weeks = diff.Days / 7;
+                
+                MyCourses myCourse = new MyCourses
+                {
+                    Id = queryData.Id,
+                    CourseTitle = queryData.CourseTitle,
+                    CourseSubject = queryData.CourseSubject,
+                    TeachingTeacherName = queryData.TeachingTeacherName,
+                    Timetables = queryData.CourseTimetables
+                        .GroupBy(ct => new {ct.DayOfWeek, ct.StartTime, ct.EndTime})
+                        .Select(g => new CourseTimetableDetail
+                        {
+                            DayOfWeek = g.Key.DayOfWeek,
+                            StartTime = g.Key.StartTime,
+                            EndTime = g.Key.EndTime
+                        })
+                        .ToList(),
+                    WeekDuration = weeks
+                };
+
+                myCourses.Add(myCourse);
+            }
+
+            int totalPages = await _context.CourseRegistrations
+                .Where(cr => cr.StudentId == userId)
+                .CountAsync();
+
+            totalPages = (int) Math.Ceiling((double) totalPages / 9);
+            
+
+            return Json(new ApiResponse<GetMyCoursesResponse>
+            {
+                Message = "Get my courses successfully",
+                Data = new GetMyCoursesResponse
+                {
+                    MyCourses = myCourses,
+                    TotalPages = totalPages
+                }
+            });
+        }
+
+
+
+
         [HttpGet("course-timetable")]
         public IActionResult GetCourseTimetablePage()
         {
