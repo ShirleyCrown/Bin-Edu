@@ -7,8 +7,10 @@ async function showAttendanceQR(id) {
 
 
     const attendanceQrCode = document.getElementById('attendanceQrCode');
+
+    attendanceQrCode.innerHTML = '';
     
-    var qrcode = new QRCode(attendanceQrCode, {
+    new QRCode(attendanceQrCode, {
         text: "course session id: " + courseTimetableId,
         width: 200,
         height: 200,
