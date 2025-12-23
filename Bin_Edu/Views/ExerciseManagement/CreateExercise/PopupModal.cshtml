@@ -1,0 +1,45 @@
+<div class="modal fade" id="createExerciseModal" tabindex="-1" aria-labelledby="createExerciseModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createExerciseModalLabel">Create new exercises</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <!-- ERROR ALERT -->
+                <div class="d-none alert alert-danger d-flex align-items-center" role="alert">
+                    <span class="material-symbols-outlined me-2">error</span>
+                    <div id="createExerciseErrorMessage">
+
+                    </div>
+                </div>
+
+                <!-- FORM -->
+                <form id="createExerciseForm">
+                    <div class="mb-3">
+                        <label for="ExerciseName" class="col-form-label">Title:</label>
+                        <input type="text" class="form-control" id="ExerciseName" name="ExerciseName">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ExerciseDescription" class="col-form-label">Description:</label>
+                        <textarea type="text" class="form-control" id="ExerciseDescription"
+                            name="ExerciseDescription"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ExerciseSubmitDeadline" class="col-form-label">End Date:</label>
+                        <input type="date" class="form-control" id="ExerciseSubmitDeadline"
+                            name="ExerciseSubmitDeadline">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createExercise()">Create</button>
+            </div>
+        </div>
+    </div>
+</div>

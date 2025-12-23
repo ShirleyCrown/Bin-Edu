@@ -29,6 +29,7 @@ async function fetchCourses(page = 0) {
                         <button class="btn btn-sm btn-light text-warning" onclick="initCourseSessionsModal(${responseData.courses[i].id})"><i class="bi bi-calendar-check"></i></button>
                         <button class="btn btn-sm btn-light text-primary" onclick="initTimetablesModal(${responseData.courses[i].id})"><i class="bi bi-calendar-range"></i></button>
                         <button class="btn btn-sm btn-light text-primary" onclick="initCreateTimetableModal(${responseData.courses[i].id})"><i class="bi bi-calendar-plus"></i></button>
+                        <a class="btn btn-sm btn-light text-primary" href="/admin/dashboard/exercise-management/${responseData.courses[i].id}"><i class="bi bi-book"></i></a>
                         <button class="btn btn-sm btn-light" onclick="initUpdateModal(${responseData.courses[i].id})"><i class="bi bi-pencil"></i></button>
                         <button class="btn btn-sm btn-light text-danger" onclick="initDeleteModal(${responseData.courses[i].id})"><i class="bi bi-trash"></i></button>
                     </td>
