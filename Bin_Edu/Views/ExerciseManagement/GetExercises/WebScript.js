@@ -23,11 +23,11 @@ async function fetchStudents(page = 0) {
                     <td>${responseData.exercises[i].submitDeadline}</td>
                     <td>${responseData.exercises[i].createdAt}</td>
                     <td>
-                        <a class="btn btn-sm btn-light text-primary" href="/admin/dashboard/exercise/${responseData.exercises[i].id}/exercise-submission"><i class="bi bi-journal-check"></i></a>
+                        <a class="btn btn-sm btn-light text-primary" href="/admin/dashboard/exercise/${responseData.exercises[i].id}/exercise-submission" title="View Submission"><i class="bi bi-journal-check"></i></a>
 
-                        <button class="btn btn-sm btn-light" onclick="initUpdateModal(${responseData.exercises[i].id})"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-light" onclick="initUpdateModal(${responseData.exercises[i].id})" title="Update"><i class="bi bi-pencil"></i></button>
 
-                        <button class="btn btn-sm btn-light text-danger" onclick="initDeleteModal('${responseData.exercises[i].id}')"><i class="bi bi-trash"></i></button>
+                        <button class="btn btn-sm btn-light text-danger" onclick="initDeleteModal('${responseData.exercises[i].id}')" title="Delete"><i class="bi bi-trash"></i></button>
                     </td>
                 </tr>
             `;
