@@ -111,6 +111,150 @@ namespace Bin_Edu.Controllers
         }
 
 
+        [HttpGet("search-courses")]
+        public async Task<IActionResult> HandleSearchCoursesApi(
+            [FromQuery(Name = "page")] int page,
+            [FromQuery(Name = "search")] string search 
+        )
+        {
+
+            List<Course> query = await _context.Courses
+                .Where(c => c.CourseTitle.Contains(search))
+                .Select(c => new Course
+                {
+                    Id = c.Id,
+                    CourseTitle = c.CourseTitle,
+                    CourseDescription = c.CourseDescription,
+                    CourseSubject = c.CourseSubject,
+                    TeachingTeacherName = c.TeachingTeacherName,
+                    CoursePrice = c.CoursePrice,
+                    OpeningDate = c.OpeningDate,
+                    EndDate = c.EndDate,
+                    CourseRegistrations = c.CourseRegistrations
+                })
+                .Skip(page * 9)
+                .Take(9)
+                .ToListAsync();
+
+            List<SearchCoursesResponse> responseDto = new List<SearchCoursesResponse>();
+            foreach (var queryData in query)
+            {
+
+                DateTime openDt = queryData.OpeningDate.ToDateTime(TimeOnly.MinValue);
+                DateTime endDt = queryData.EndDate.ToDateTime(TimeOnly.MinValue);
+
+                // Get difference
+                TimeSpan diff = endDt - openDt;
+
+                // Full weeks
+                int weeks = diff.Days / 7;
+
+                SearchCoursesResponse responseData = new SearchCoursesResponse
+                {
+                    Id = queryData.Id,
+                    CourseTitle = queryData.CourseTitle,
+                    CourseDescription = queryData.CourseDescription,
+                    CourseSubject = queryData.CourseSubject,
+                    TeachingTeacherName = queryData.TeachingTeacherName,
+                    CoursePrice = queryData.CoursePrice,
+                    NumberOfStudents = queryData.CourseRegistrations.Count,
+                    WeekDuration = weeks
+                };
+
+                responseDto.Add(responseData);
+            }
+
+            int totalPages = await _context.Courses
+                .Where(c => c.CourseTitle.Contains(search))
+                .CountAsync();
+
+            totalPages = (int) Math.Ceiling((double) totalPages / 9);
+
+            return Json(new ApiResponse<dynamic>
+            {
+                Message = "Search List of courses successfully",
+                Data = new
+                {
+                    Courses = responseDto, 
+                    TotalPages = totalPages
+                }
+            });
+            
+        }
+
+
+        [HttpGet("filter-courses")]
+        public async Task<IActionResult> HandleFilterCoursesApi(
+            [FromQuery(Name = "page")] int page,
+            [FromQuery(Name = "search")] string filter
+        )
+        {
+
+            List<Course> query = await _context.Courses
+                .Where(c => c.CourseSubject.ToLower() == filter.ToLower())
+                .Select(c => new Course
+                {
+                    Id = c.Id,
+                    CourseTitle = c.CourseTitle,
+                    CourseDescription = c.CourseDescription,
+                    CourseSubject = c.CourseSubject,
+                    TeachingTeacherName = c.TeachingTeacherName,
+                    CoursePrice = c.CoursePrice,
+                    OpeningDate = c.OpeningDate,
+                    EndDate = c.EndDate,
+                    CourseRegistrations = c.CourseRegistrations
+                })
+                .Skip(page * 9)
+                .Take(9)
+                .ToListAsync();
+
+            List<SearchCoursesResponse> responseDto = new List<SearchCoursesResponse>();
+            foreach (var queryData in query)
+            {
+
+                DateTime openDt = queryData.OpeningDate.ToDateTime(TimeOnly.MinValue);
+                DateTime endDt = queryData.EndDate.ToDateTime(TimeOnly.MinValue);
+
+                // Get difference
+                TimeSpan diff = endDt - openDt;
+
+                // Full weeks
+                int weeks = diff.Days / 7;
+
+                SearchCoursesResponse responseData = new SearchCoursesResponse
+                {
+                    Id = queryData.Id,
+                    CourseTitle = queryData.CourseTitle,
+                    CourseDescription = queryData.CourseDescription,
+                    CourseSubject = queryData.CourseSubject,
+                    TeachingTeacherName = queryData.TeachingTeacherName,
+                    CoursePrice = queryData.CoursePrice,
+                    NumberOfStudents = queryData.CourseRegistrations.Count,
+                    WeekDuration = weeks
+                };
+
+                responseDto.Add(responseData);
+            }
+
+            int totalPages = await _context.Courses
+                .Where(c => c.CourseSubject.ToLower() == filter.ToLower())
+                .CountAsync();
+
+            totalPages = (int) Math.Ceiling((double) totalPages / 9);
+
+            return Json(new ApiResponse<dynamic>
+            {
+                Message = "Filter List of courses successfully",
+                Data = new
+                {
+                    Courses = responseDto, 
+                    TotalPages = totalPages
+                }
+            });
+            
+        }
+
+
         [HttpGet("course-detail/{course_id}")]
         public IActionResult GetCourseDetailPage(
             [FromRoute(Name = "course_id")] int courseId
