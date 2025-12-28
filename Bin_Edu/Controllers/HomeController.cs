@@ -43,6 +43,28 @@ namespace Bin_Edu.Controllers
             return View("~/Views/Home/WebPage.cshtml");
         }
 
+
+        [HttpGet("about-us")]
+        public IActionResult GetAboutUsPage()
+        {
+            return View("~/Views/AboutUs/WebPage.cshtml");
+        }
+
+
+        [HttpGet("privacy-policy")]
+        public IActionResult GetPrivacyPolicyPage()
+        {
+            return View("~/Views/PrivacyPolicy/WebPage.cshtml");
+        }
+
+
+        [HttpGet("contact-us")]
+        public IActionResult GetContactUsPage()
+        {
+            return View("~/Views/ContactUs/WebPage.cshtml");
+        }
+
+
         [HttpGet("get-courses")]
         public async Task<IActionResult> HandleGetCourseListApi(
             [FromQuery(Name = "page")] int page 
