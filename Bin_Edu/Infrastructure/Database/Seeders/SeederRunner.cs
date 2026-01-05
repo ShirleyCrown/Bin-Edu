@@ -277,6 +277,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
             foreach (var course in courses)
             {
 
+                // Course timetables
                 course.CourseTimetables = new List<CourseTimetable>();
 
                 List<DateOnly> courseStartDates = this
@@ -297,6 +298,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     course.CourseTimetables.Add(courseTimetable);
                 }
 
+
+                // // Course execises
+                // course.CourseExercises = new List<CourseExercise>();
             }
 
 
