@@ -646,7 +646,7 @@ namespace Bin_Edu.Controllers
         }
 
 
-         [HttpGet("my-courses/get-detail/{course_id}")]
+        [HttpGet("my-courses/get-detail/{course_id}")]
         public async Task<IActionResult> HandleGetMyCourseDetail(
             [FromRoute(Name = "course_id")] int courseId
         )
@@ -757,6 +757,18 @@ namespace Bin_Edu.Controllers
                 Message = "Get my course timetable successfully",
                 Data = responseDto
             });
+        }
+
+
+        [HttpGet("my-courses/{course_id}/exercises")]
+        public IActionResult GetMyCourseExercisesPage(
+            [FromRoute(Name = "course_id")] int courseId
+        )
+        {
+
+            ViewBag.CourseId = courseId;
+            
+            return View("~/Views/MyCourseExercises/WebPage.cshtml");
         }
 
 
