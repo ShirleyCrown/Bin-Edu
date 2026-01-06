@@ -1,0 +1,126 @@
+@{
+    Layout = "~/Views/Layouts/StudentLayout/LayoutPage.cshtml";
+}
+
+<style>
+    .file-info {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+</style>
+
+<input type="hidden" name="CourseId" id="CourseId" value="@ViewBag.CourseId">
+
+
+<div class="px-5">
+    <!-- HEADER -->
+    <div class="mb-5">
+        <h1 class="fw-bold display-6">My Exercises</h1>
+        <p class="text-secondary">Manage your exercises from course.</p>
+    </div>
+
+    <!-- ASSIGNMENT CARD -->
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body d-flex flex-column flex-md-row justify-content-between gap-3">
+            <div class="w-75">
+                <h5 class="fw-bold">Calculate complex equation</h5>
+
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto nihil amet odio sit nulla, esse
+                    harum adipisci voluptatibus tenetur, consequuntur ipsam, rem officiis aspernatur repellat aliquid
+                    nemo cupiditate quod beatae.</p>
+
+                <span class="badge bg-info">In Progress</span>
+
+                <div class="text-secondary small d-flex flex-wrap gap-4 mt-2">
+                    <span><span class="material-symbols-outlined">event</span> 12/12/2026</span>
+                </div>
+            </div>
+
+            <button class="btn btn-outline-primary align-self-md-center" data-bs-toggle="modal"
+                data-bs-target="#submitExerciseModal">
+                Submit <span class="material-symbols-outlined">edit_document</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ASSIGNMENT CARD -->
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body d-flex flex-column flex-md-row justify-content-between gap-3">
+            <div class="w-75">
+                <h5 class="fw-bold">How to write a argument</h5>
+
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto nihil amet odio sit nulla, esse
+                    harum adipisci voluptatibus tenetur, consequuntur ipsam, rem officiis aspernatur repellat aliquid
+                    nemo cupiditate quod beatae.</p>
+
+                <span class="badge bg-success">Submitted</span>
+
+                <div class="text-secondary small d-flex flex-wrap gap-4 mt-2">
+                    <span><span class="material-symbols-outlined">event</span> 17/02/2026 </span>
+                    <span><span class="material-symbols-outlined">task_alt</span> 5/10 </span>
+                </div>
+            </div>
+
+            <button class="btn btn-outline-secondary align-self-md-center" data-bs-toggle="modal"
+                data-bs-target="#viewSubmissionModal">
+                View Submission
+            </button>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Submit Modal -->
+<div class="modal fade" id="submitExerciseModal" tabindex="-1" aria-labelledby="submitExerciseModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="submitExerciseModalLabel">Submit Exercise File</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="exerciseForm">
+                    <div class="mb-3">
+                        <label for="exerciseFile" class="form-label">Exercise File</label>
+                        <input type="file" class="form-control" id="exerciseFile" accept=".pdf,.doc,.docx" required>
+                        <div class="file-info mt-2">
+                            Accepted formats: PDF, DOC, DOCX (Max size: 10MB)
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitExercise()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Submission Modal -->
+<div class="modal fade" id="viewSubmissionModal" tabindex="-1" aria-labelledby="viewSubmissionModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewSubmissionModalLabel">Submitted File</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="submissionDetails">
+                    <div class="alert alert-info">
+                        No file has been submitted yet.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/static/MyCourseExercises/WebScript.js"></script>
