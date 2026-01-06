@@ -35,6 +35,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
             await GenerateRoleData();
             await GenerateUserData();
             await GenerateCourseData();
+            await GenerateCourseExerciseData();
+            await GenerateCourseRegistrationData();
+            await GenerateExerciseSubmissionData();
 
             Console.WriteLine("✅ Seeder completed successfully!");
         }
@@ -177,7 +180,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CourseTitle = "Basic Algebra",
                     CourseDescription = "Learn foundational algebra concepts and problem-solving skills.",
                     CourseSubject = "Math",
-                    CoursePrice = 1200000, 
+                    CoursePrice = 1200000,
                     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
                     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7)
                 },
@@ -284,7 +287,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     .GetDatesByDayOfWeek(course.OpeningDate, course.EndDate, DayOfWeek.Monday);
 
                 foreach (var courseStartDate in courseStartDates)
-                {        
+                {
                     CourseTimetable courseTimetable = new CourseTimetable
                     {
                         StartTime = TimeOnly.Parse("08:00:00"),
@@ -312,7 +315,85 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
         }
 
 
+        private async Task GenerateCourseExerciseData()
+        {
+            var courses = await _context.Courses.ToListAsync();
 
+            var exercises = new List<CourseExercise>();
+
+            foreach (var course in courses)
+            {
+                for (int i = 1; i <= 10; i++)
+                {
+                    exercises.Add(new CourseExercise
+                    {
+                        CourseId = course.Id,
+                        ExerciseName = $"Exercise {i} - {course.CourseTitle}",
+                        ExerciseDescription = $"Exercise {i} for course {course.CourseTitle}",
+                        ExerciseSubmitDeadline = DateTime.UtcNow.AddDays(i * 7),
+                        CreatedAt = DateTime.UtcNow
+                    });
+                }
+            }
+
+            await _context.CourseExercises.AddRangeAsync(exercises);
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine("Course exercises generated.");
+        }
+
+        public async Task GenerateCourseRegistrationData()
+        {
+            var courses = await _context.Courses.ToListAsync();
+            var students = await _userManager.GetUsersInRoleAsync("STUDENT");
+
+            var registrations = new List<CourseRegistration>();
+
+            foreach (var course in courses)
+            {
+                foreach (var student in students)
+                {
+                    registrations.Add(new CourseRegistration
+                    {
+                        CourseId = course.Id,
+                        StudentId = student.Id,
+                        RegisteredAt = DateTime.UtcNow
+                    });
+                }
+            }
+
+            await _context.CourseRegistrations.AddRangeAsync(registrations);
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine("Course registrations generated.");
+        }
+
+        private async Task GenerateExerciseSubmissionData()
+        {
+            var exercises = await _context.CourseExercises.ToListAsync();
+            var students = await _userManager.GetUsersInRoleAsync("STUDENT");
+
+            var submissions = new List<ExerciseSubmission>();
+
+            foreach (var exercise in exercises)
+            {
+                foreach (var student in students)
+                {
+                    submissions.Add(new ExerciseSubmission
+                    {
+                        CourseExerciseId = exercise.Id,
+                        CourseRegistrationId = 1, // Giả sử có CourseRegistrationId hợp lệ
+                        SubmittedAt = DateTime.UtcNow,
+                        FileName = $"submission_{student.UserName}_exercise_{exercise.Id}.pdf",
+                    });
+                }
+            }
+
+            await _context.ExerciseSubmissions.AddRangeAsync(submissions);
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine("Exercise submissions generated.");
+        }
 
         // ========== PRIVATE METHODS ==============
         private List<DateOnly> GetDatesByDayOfWeek(DateOnly start, DateOnly end, DayOfWeek targetDay)

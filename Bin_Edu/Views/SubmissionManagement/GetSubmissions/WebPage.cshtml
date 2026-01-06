@@ -1,0 +1,44 @@
+@{
+    Layout = "~/Views/Layouts/AdminLayout/LayoutPage.cshtml";
+    ViewData["Title"] = "Submission Management";
+}
+
+
+
+<h2 class="mb-4">Submission Management</h2>
+
+<!-- TABLE -->
+<div class="card">
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Student Name</th>
+                    <th>Submitted At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="submissionTableBody">
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="card-footer d-flex justify-content-center">
+        <nav>
+            <ul class="pagination mb-0" id="pagination">
+
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+
+
+
+
+<script src="/static/SubmissionManagement/GetSubmissions/WebScript.js"></script>
