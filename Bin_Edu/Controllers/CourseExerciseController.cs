@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Bin_Edu.Controllers.RequestDto;
 using Bin_Edu.Controllers.ResponseDto;
@@ -34,7 +35,7 @@ namespace Bin_Edu.Controllers
 
         [HttpGet("admin/dashboard/exercise-management/{courseId}/get-exercises")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> GetExercisesApi(
+        public async Task<IActionResult> GetExercisesAdminApi(
             int courseId,
             [FromQuery(Name = "page")] int page)
         {
@@ -279,7 +280,42 @@ namespace Bin_Edu.Controllers
         }
 
 
+        [HttpGet("exercise-management/{courseId}/get-exercises")]
+        [Authorize(Roles = "STUDENT")]
+        public async Task<IActionResult> GetExercisesApi(int courseId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            var registration = _context.CourseRegistrations.FirstOrDefault(es => es.CourseId == courseId && es.StudentId == userId);
+
+            List<GetExerciseResponse> responseDto = _context.CourseExercises
+                .Where(c => c.CourseId == courseId)
+                .Select(c => new GetExerciseResponse
+                {
+                    Id = c.Id,
+                    Name = c.ExerciseName,
+                    Description = c.ExerciseDescription,
+                    SubmitDeadline = DateOnly.FromDateTime(c.ExerciseSubmitDeadline),
+                    IsSubmitted = c.ExerciseSubmissions.Any(es => es.CourseExerciseId == c.Id && es.CourseRegistration == registration),
+                    SubmitFileName = c.ExerciseSubmissions.Where(es => es.CourseExerciseId == c.Id && es.CourseRegistration == registration)
+                                        .Select(es => es.FileName)
+                                        .FirstOrDefault(),
+                    Score = c.ExerciseSubmissions
+                                .Where(es => es.CourseExerciseId == c.Id && es.CourseRegistration == registration)
+                                .Select(es => es.Score)
+                                .FirstOrDefault() ?? -1f
+                })
+                .ToList();
+
+            return Json(new ApiResponse<dynamic>
+            {
+                Message = "Get List of exercises successfully",
+                Data = new
+                {
+                    Exercises = responseDto
+                }
+            });
+        }
 
 
 

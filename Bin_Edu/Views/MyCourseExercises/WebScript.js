@@ -1,51 +1,63 @@
 let submittedFile = null;
 
-function submitExercise() {
-  const form = document.getElementById("exerciseForm");
-  const fileInput = document.getElementById("exerciseFile");
-  const file = fileInput.files[0];
+async function submitExercise(exerciseId) {
+    const form = document.getElementById("exerciseForm");
+    const fileInput = document.getElementById("exerciseFile");
+    const file = fileInput.files[0];
 
-  // Validate form
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
+    // Validate form
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
 
-  // Validate file size (10MB)
-  if (file && file.size > 10 * 1024 * 1024) {
-    alert("File size exceeds 10MB limit.");
-    return;
-  }
+    if (!file) {
+        alert("Please choose a file.");
+        return;
+    }
 
-  // Store submitted file info
-  submittedFile = {
-    name: file.name,
-    size: file.size,
-    type: file.type,
-    lastModified: new Date(file.lastModified),
-    file: file,
-  };
+    // Validate file size (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+        alert("File size exceeds 10MB limit.");
+        return;
+    }
 
-  // In a real application, you would send this data to a server
-  console.log("Submitting exercise file:", submittedFile);
+    // Create FormData
+    const formData = new FormData();
+    formData.append("File", file); // PHẢI trùng tên property trong SubmitExerciseRequest
 
-  // Close modal
-  const modal = bootstrap.Modal.getInstance(
-    document.getElementById("submitExerciseModal")
-  );
-  modal.hide();
+    try {
+        await axios.post(
+            `/api/exercise-submission/1/submit`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            }
+        );
 
-  // Show success message
-  const successAlert = document.getElementById("successAlert");
-  successAlert.style.display = "block";
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(
+            document.getElementById("submitExerciseModal")
+        );
+        modal.hide();
 
-  // Reset form
-  form.reset();
+        // Show success message
+        // const successAlert = document.getElementById("successAlert");
+        // successAlert.style.display = "block";
 
-  // Hide success message after 5 seconds
-  setTimeout(() => {
-    successAlert.style.display = "none";
-  }, 5000);
+        // Reset form
+        form.reset();
+
+        setTimeout(() => {
+            successAlert.style.display = "none";
+        }, 5000);
+
+    } catch (err) {
+        console.error(err);
+        alert(err.response?.data?.message || "Upload failed");
+    }
 }
 
 function formatFileSize(bytes) {
