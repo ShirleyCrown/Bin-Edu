@@ -65,6 +65,28 @@ namespace Bin_Edu.Controllers
         }
 
 
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetProfilePage()
+        {
+
+            var userProfile = await _context.Users
+                .Where(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                .Select(u => new GetProfileResponse
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    Dob = u.Dob.ToString("dd/MM/yyyy"),
+                    Grade = u.Grade,
+                    School = u.School
+                })
+                .FirstOrDefaultAsync();
+
+            return View("~/Views/Profile/WebPage.cshtml", userProfile);
+        }
+
+
         [HttpGet("get-courses")]
         public async Task<IActionResult> HandleGetCourseListApi(
             [FromQuery(Name = "page")] int page 
