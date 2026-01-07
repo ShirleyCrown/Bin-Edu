@@ -25,9 +25,9 @@ async function fetchStudents(page = 0) {
                     <td>
                         <a class="btn btn-sm btn-light text-primary" href="/admin/dashboard/exercise/${responseData.exercises[i].id}/exercise-submission" title="View Submission"><i class="bi bi-journal-check"></i></a>
 
-                        <button class="btn btn-sm btn-light" onclick="initUpdateModal(${responseData.exercises[i].id})" title="Update"><i class="bi bi-pencil"></i></button>
+                        <a class="btn btn-sm btn-light" onclick="initUpdateModal(${responseData.exercises[i].id})" title="Update"><i class="bi bi-pencil"></i></a>
 
-                        <button class="btn btn-sm btn-light text-danger" onclick="initDeleteModal('${responseData.exercises[i].id}')" title="Delete"><i class="bi bi-trash"></i></button>
+                        <a class="btn btn-sm btn-light text-danger" onclick="initDeleteModal('${responseData.exercises[i].id}')" title="Delete"><i class="bi bi-trash"></i></a>
                     </td>
                 </tr>
             `;

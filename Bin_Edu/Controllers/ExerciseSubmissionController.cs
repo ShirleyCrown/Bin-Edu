@@ -59,6 +59,7 @@ namespace Bin_Edu.Controllers
                 .Select(s => new GetSubmissionResponse
                 {
                     Id = s.Id,
+                    Score = s.Score,
                     StudentName = s.CourseRegistration.Student.FullName,
                     SubmittedAt = DateOnly.FromDateTime(s.SubmittedAt),
                 })

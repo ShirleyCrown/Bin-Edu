@@ -79,9 +79,12 @@ async function fetchCourses(page = 0) {
                     <td>${c.weekDuration}</td>
                     <td>${c.numberOfStudents}</td>
                     <td>
-                        <button class="btn btn-sm btn-light" onclick="initUpdateModal(${c.id})">
-                            <i class="bi bi-pencil"></i>
-                        </button>
+                        <a class="btn btn-sm btn-light text-warning" title="View Course Sessions" onclick="initCourseSessionsModal(${responseData.courses[i].id})"><i class="bi bi-calendar-check"></i></a>
+                        <a class="btn btn-sm btn-light text-primary" title="View Course Timetable" onclick="initTimetablesModal(${responseData.courses[i].id})"><i class="bi bi-calendar-range"></i></a>
+                        <a class="btn btn-sm btn-light text-primary" title="Create Timetable" onclick="initCreateTimetableModal(${responseData.courses[i].id})"><i class="bi bi-calendar-plus"></i></a>
+                        <a class="btn btn-sm btn-light text-primary" title="View Exercises" href="/admin/dashboard/exercise-management/${responseData.courses[i].id}"><i class="bi bi-book"></i></a>
+                        <a class="btn btn-sm btn-light" title="Update Course" onclick="initUpdateModal(${responseData.courses[i].id})"><i class="bi bi-pencil"></i></a>
+                        <a class="btn btn-sm btn-light text-danger" title="Delete Course" onclick="initDeleteModal(${responseData.courses[i].id})"><i class="bi bi-trash"></i></a>
                     </td>
                 </tr>
             `;

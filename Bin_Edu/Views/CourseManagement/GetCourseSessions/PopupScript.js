@@ -18,6 +18,8 @@ async function initCourseSessionsModal(id) {
 async function fetchCourseSessions() {
 
     const courseSessionTableBody = document.getElementById("courseSessionTableBody");
+
+    courseSessionTableBody.innerHTML = '';
    
     try {
 
@@ -26,7 +28,6 @@ async function fetchCourseSessions() {
         
         const responseData = response.data.data;
 
-        console.log(responseData);
         
 
         for (let i = 0; i < responseData.length; i++) {

@@ -18,11 +18,12 @@ async function fetchSubmissions(page = 0) {
             submissionTableBody.innerHTML += `
                 <tr>
                     <td>${responseData[i].studentName}</td>
+                    <td>${responseData[i].score ? responseData[i].score : "N/A"}</td>
                     <td>${responseData[i].submittedAt}</td>
                     <td>
-                        <button class="btn btn-sm btn-light" onclick="initUpdateModal(${responseData[i].id})"><i class="bi bi-pencil-square"></i></button>
+                        <a class="btn btn-sm btn-light" title="Give Mark" onclick="initUpdateModal(${responseData[i].id})"><i class="bi bi-pencil-square"></i></a>
 
-                        <button class="btn btn-sm btn-light text-primary" onclick="downloadFile('${responseData[i].id}')"><i class="bi bi-download"></i></button>
+                        <a class="btn btn-sm btn-light text-primary" title="Download File" onclick="downloadFile('${responseData[i].id}')"><i class="bi bi-download"></i></a>
                     </td>
                 </tr>
             `;
