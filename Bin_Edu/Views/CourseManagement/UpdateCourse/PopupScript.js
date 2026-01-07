@@ -1,6 +1,32 @@
 
 let updateCourseId = "";
 
+
+async function fetchSubjects() {
+
+    const courseSubjectSelect = document.getElementsByName("UpdateCourseSubject")[0];
+
+    try {
+
+        const response = await axios.get(`/subjects`);
+
+        const subjects = response.data;
+        
+
+        courseSubjectSelect.innerHTML = `<option value="" selected>Select subject</option>`;
+        subjects.forEach(subject => {
+            const option = document.createElement("option");
+            option.value = subject.id;
+            option.text = subject.subjectName;
+            courseSubjectSelect.appendChild(option);
+        })
+
+    }
+    catch (ex) {
+        console.log(ex);
+    }
+}
+
 async function initUpdateModal(id) {
 
     const courseTitleInput = document.getElementsByName("UpdateCourseTitle")[0];
@@ -20,7 +46,7 @@ async function initUpdateModal(id) {
 
         courseTitleInput.value = responseData.courseTitle;
         courseDescriptionInput.value = responseData.courseDescription;
-        courseSubjectInput.value = responseData.courseSubject;
+        courseSubjectInput.value = responseData.courseSubjectId;
         coursePriceInput.value = responseData.coursePrice;
         teachingTeacherNameInput.value = responseData.teachingTeacherName;
         openingDateInput.value = responseData.openingDate;
@@ -78,3 +104,8 @@ async function updateCourse() {
         }
     }
 }
+
+
+
+// CALL FUNCTIONS
+fetchSubjects();

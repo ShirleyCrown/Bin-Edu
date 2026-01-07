@@ -13,6 +13,8 @@ namespace Bin_Edu.Controllers.ResponseDto
 
         public string CourseTitle { get; set; }
 
+        public int CourseSubjectId { get; set; }
+
         public string CourseSubject { get; set; }
 
         public int NumberOfStudents { get; set; }

@@ -13,7 +13,7 @@ namespace Bin_Edu.Controllers.RequestDto
 
         public string CourseDescription { get; set; }
 
-        public string CourseSubject { get; set; }
+        public int? SubjectId { get; set; }
 
         public string CoursePrice { get; set; }
 

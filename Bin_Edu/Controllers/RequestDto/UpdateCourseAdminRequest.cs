@@ -13,7 +13,7 @@ namespace Bin_Edu.Controllers.RequestDto
 
         public string UpdateCourseDescription { get; set; }
 
-        public string UpdateCourseSubject { get; set; }
+        public int? UpdateCourseSubject { get; set; }
 
         public string UpdateCoursePrice { get; set; }
 

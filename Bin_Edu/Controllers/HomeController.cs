@@ -99,8 +99,8 @@ namespace Bin_Edu.Controllers
                     Id = c.Id,
                     CourseTitle = c.CourseTitle,
                     CourseDescription = c.CourseDescription,
-                    CourseSubject = c.CourseSubject,
                     TeachingTeacherName = c.TeachingTeacherName,
+                    Subject = c.Subject,
                     CoursePrice = c.CoursePrice,
                     OpeningDate = c.OpeningDate,
                     EndDate = c.EndDate,
@@ -128,7 +128,7 @@ namespace Bin_Edu.Controllers
                     Id = queryData.Id,
                     CourseTitle = queryData.CourseTitle,
                     CourseDescription = queryData.CourseDescription,
-                    CourseSubject = queryData.CourseSubject,
+                    CourseSubject = queryData.Subject.SubjectName,
                     TeachingTeacherName = queryData.TeachingTeacherName,
                     CoursePrice = queryData.CoursePrice,
                     NumberOfStudents = queryData.CourseRegistrations.Count,
@@ -169,8 +169,8 @@ namespace Bin_Edu.Controllers
                     Id = c.Id,
                     CourseTitle = c.CourseTitle,
                     CourseDescription = c.CourseDescription,
-                    CourseSubject = c.CourseSubject,
                     TeachingTeacherName = c.TeachingTeacherName,
+                    Subject = c.Subject,
                     CoursePrice = c.CoursePrice,
                     OpeningDate = c.OpeningDate,
                     EndDate = c.EndDate,
@@ -198,7 +198,7 @@ namespace Bin_Edu.Controllers
                     Id = queryData.Id,
                     CourseTitle = queryData.CourseTitle,
                     CourseDescription = queryData.CourseDescription,
-                    CourseSubject = queryData.CourseSubject,
+                    CourseSubject = queryData.Subject.SubjectName,
                     TeachingTeacherName = queryData.TeachingTeacherName,
                     CoursePrice = queryData.CoursePrice,
                     NumberOfStudents = queryData.CourseRegistrations.Count,
@@ -235,14 +235,14 @@ namespace Bin_Edu.Controllers
         {
 
             List<Course> query = await _context.Courses
-                .Where(c => c.CourseSubject.ToLower() == filter.ToLower())
+                .Where(c => c.Subject.SubjectName.ToLower() == filter.ToLower())
                 .Select(c => new Course
                 {
                     Id = c.Id,
                     CourseTitle = c.CourseTitle,
                     CourseDescription = c.CourseDescription,
-                    CourseSubject = c.CourseSubject,
                     TeachingTeacherName = c.TeachingTeacherName,
+                    Subject = c.Subject,
                     CoursePrice = c.CoursePrice,
                     OpeningDate = c.OpeningDate,
                     EndDate = c.EndDate,
@@ -270,7 +270,7 @@ namespace Bin_Edu.Controllers
                     Id = queryData.Id,
                     CourseTitle = queryData.CourseTitle,
                     CourseDescription = queryData.CourseDescription,
-                    CourseSubject = queryData.CourseSubject,
+                    CourseSubject = queryData.Subject.SubjectName,
                     TeachingTeacherName = queryData.TeachingTeacherName,
                     CoursePrice = queryData.CoursePrice,
                     NumberOfStudents = queryData.CourseRegistrations.Count,
@@ -281,7 +281,7 @@ namespace Bin_Edu.Controllers
             }
 
             int totalPages = await _context.Courses
-                .Where(c => c.CourseSubject.ToLower() == filter.ToLower())
+                .Where(c => c.Subject.SubjectName.ToLower() == filter.ToLower())
                 .CountAsync();
 
             totalPages = (int) Math.Ceiling((double) totalPages / 9);
@@ -325,8 +325,8 @@ namespace Bin_Edu.Controllers
                     CourseTitle = c.CourseTitle,
                     CourseDescription = c.CourseDescription,
                     TeachingTeacherName = c.TeachingTeacherName,
+                    Subject = c.Subject,
                     CoursePrice = c.CoursePrice,
-                    CourseSubject = c.CourseSubject,
                     CourseRegistrations = c.CourseRegistrations,
                     CourseTimetables = c.CourseTimetables,
                     OpeningDate = c.OpeningDate,
@@ -350,7 +350,7 @@ namespace Bin_Edu.Controllers
                 Id = query.Id,
                 CourseTitle = query.CourseTitle,
                 CourseDescription = query.CourseDescription,
-                CourseSubject = query.CourseSubject,
+                CourseSubject = query.Subject.SubjectName,
                 TeachingTeacherName = query.TeachingTeacherName,
                 CoursePrice = query.CoursePrice,
                 NumberOfStudents = query.CourseRegistrations.Count,
@@ -371,15 +371,15 @@ namespace Bin_Edu.Controllers
             List<Course> queryCourseDetails = await _context.Courses
                 .Where(c => 
                     c.Id != courseId && 
-                    c.CourseSubject == query.CourseSubject
+                    c.Subject.SubjectName == query.Subject.SubjectName
                 )
                 .Select(c => new Course
                 {
                     Id = c.Id,
                     CourseTitle = c.CourseTitle,
                     CourseDescription = c.CourseDescription,
-                    CourseSubject = c.CourseSubject,
                     TeachingTeacherName = c.TeachingTeacherName,
+                    Subject = c.Subject,
                     CoursePrice = c.CoursePrice,
                     OpeningDate = c.OpeningDate,
                     EndDate = c.EndDate,
@@ -406,7 +406,7 @@ namespace Bin_Edu.Controllers
                     Id = queryCourseDetail.Id,
                     CourseTitle = queryCourseDetail.CourseTitle,
                     CourseDescription = queryCourseDetail.CourseDescription,
-                    CourseSubject = queryCourseDetail.CourseSubject,
+                    CourseSubject = query.Subject.SubjectName,
                     TeachingTeacherName = queryCourseDetail.TeachingTeacherName,
                     CoursePrice = queryCourseDetail.CoursePrice,
                     NumberOfStudents = queryCourseDetail.CourseRegistrations.Count,
@@ -457,6 +457,7 @@ namespace Bin_Edu.Controllers
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
 
             Course? query = await _context.Courses
+                .Include(c => c.Subject)
                 .Include(c => c.CourseTimetables)
                 .FirstOrDefaultAsync(c => c.Id == courseId);
 
@@ -550,7 +551,7 @@ namespace Bin_Edu.Controllers
                 Id = query.Id,
                 CourseTitle = query.CourseTitle,
                 CourseDescription = query.CourseDescription,
-                CourseSubject = query.CourseSubject,
+                CourseSubject = query.Subject.SubjectName,
                 TeachingTeacherName = query.TeachingTeacherName,
                 CoursePrice = query.CoursePrice,
                 NumberOfStudents = query.CourseRegistrations.Count,
@@ -592,8 +593,8 @@ namespace Bin_Edu.Controllers
                 {
                     Id = cr.Course.Id,
                     CourseTitle = cr.Course.CourseTitle,
-                    CourseSubject = cr.Course.CourseSubject,
                     TeachingTeacherName = cr.Course.TeachingTeacherName,
+                    Subject = cr.Course.Subject,
                     CourseTimetables = cr.Course.CourseTimetables,
                     OpeningDate = cr.Course.OpeningDate,
                     EndDate = cr.Course.EndDate
@@ -620,7 +621,7 @@ namespace Bin_Edu.Controllers
                 {
                     Id = queryData.Id,
                     CourseTitle = queryData.CourseTitle,
-                    CourseSubject = queryData.CourseSubject,
+                    CourseSubject = queryData.Subject.SubjectName,
                     TeachingTeacherName = queryData.TeachingTeacherName,
                     Timetables = queryData.CourseTimetables
                         .GroupBy(ct => new {ct.DayOfWeek, ct.StartTime, ct.EndTime})
@@ -683,8 +684,8 @@ namespace Bin_Edu.Controllers
                     CourseTitle = c.CourseTitle,
                     CourseDescription = c.CourseDescription,
                     TeachingTeacherName = c.TeachingTeacherName,
+                    Subject = c.Subject,
                     CoursePrice = c.CoursePrice,
-                    CourseSubject = c.CourseSubject,
                     CourseRegistrations = c.CourseRegistrations,
                     CourseTimetables = c.CourseTimetables,
                     OpeningDate = c.OpeningDate,
@@ -708,7 +709,7 @@ namespace Bin_Edu.Controllers
                 Id = query.Id,
                 CourseTitle = query.CourseTitle,
                 CourseDescription = query.CourseDescription,
-                CourseSubject = query.CourseSubject,
+                CourseSubject = query.Subject.SubjectName,
                 TeachingTeacherName = query.TeachingTeacherName,
                 WeekDuration = weeks,
                 Timetables = query.CourseTimetables

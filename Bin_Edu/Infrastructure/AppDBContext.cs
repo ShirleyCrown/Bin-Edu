@@ -20,6 +20,7 @@ namespace Bin_Edu.Infrastructure
 
         // ----------------- TABLES -----------------------------
         public DbSet<AppUser> Users { get; set; }
+        public DbSet<Subject> Subjects { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseTimetable> CourseTimetables { get; set; }
         public DbSet<CourseRegistration> CourseRegistrations { get; set; }

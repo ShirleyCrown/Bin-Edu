@@ -125,7 +125,7 @@ namespace Bin_Edu.Controllers
             // 📚 FILTER SUBJECT
             if (!string.IsNullOrWhiteSpace(req.Subject))
             {
-                query = query.Where(c => c.CourseSubject == req.Subject);
+                query = query.Where(c => c.Subject.SubjectName == req.Subject);
             }
 
             // 💰 FILTER PRICE
@@ -145,7 +145,8 @@ namespace Bin_Edu.Controllers
                 {
                     Id = c.Id,
                     CourseTitle = c.CourseTitle,
-                    CourseSubject = c.CourseSubject,
+                     CourseSubjectId = c.SubjectId,
+                    CourseSubject = c.Subject.SubjectName,
                     TeachingTeacherName = c.TeachingTeacherName,
                     CoursePrice = c.CoursePrice,
                     NumberOfStudents = c.CourseRegistrations.Count,
@@ -197,7 +198,7 @@ namespace Bin_Edu.Controllers
                     Message = "Course description is required."
                 });
 
-            if (string.IsNullOrWhiteSpace(requestDto.CourseSubject))
+            if (requestDto.SubjectId == null)
                 return BadRequest(new ApiResponse<dynamic>
                 {
                     Data = "Course subject is required.",
@@ -268,7 +269,7 @@ namespace Bin_Edu.Controllers
                 TeachingTeacherName = requestDto.TeachingTeacherName,
                 CourseTitle = requestDto.CourseTitle,
                 CourseDescription = requestDto.CourseDescription,
-                CourseSubject = requestDto.CourseSubject,
+                SubjectId = requestDto.SubjectId.Value,
                 CoursePrice = price,
                 OpeningDate = openingDate,
                 EndDate = endDate
@@ -299,7 +300,8 @@ namespace Bin_Edu.Controllers
                     Id = c.Id,
                     CourseTitle = c.CourseTitle,
                     CourseDescription = c.CourseDescription,
-                    CourseSubject = c.CourseSubject,
+                    CourseSubjectId = c.SubjectId,
+                    CourseSubject = c.Subject.SubjectName,
                     TeachingTeacherName = c.TeachingTeacherName,
                     CoursePrice = c.CoursePrice,
                     NumberOfStudents = c.CourseRegistrations.Count,
@@ -347,7 +349,7 @@ namespace Bin_Edu.Controllers
                     Message = "Course description is required."
                 });
 
-            if (string.IsNullOrWhiteSpace(requestDto.UpdateCourseSubject))
+            if (requestDto.UpdateCourseSubject == null)
                 return BadRequest(new ApiResponse<dynamic>
                 {
                     Data = "Course subject is required.",
@@ -421,7 +423,7 @@ namespace Bin_Edu.Controllers
             course.TeachingTeacherName = requestDto.UpdateTeachingTeacherName;
             course.CourseTitle = requestDto.UpdateCourseTitle;
             course.CourseDescription = requestDto.UpdateCourseDescription;
-            course.CourseSubject = requestDto.UpdateCourseSubject;
+            course.SubjectId = requestDto.UpdateCourseSubject.Value;
             course.CoursePrice = price;
             course.OpeningDate = openingDate;
             course.EndDate = endDate;
