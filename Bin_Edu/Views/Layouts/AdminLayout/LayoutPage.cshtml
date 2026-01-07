@@ -37,8 +37,12 @@
 
         .sidebar {
             width: 260px;
-            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
         }
+
 
         .avatar {
             width: 32px;
@@ -113,7 +117,6 @@
                 </div>
 
                 <div class="d-flex align-items-center gap-3">
-                    <button class="btn btn-light"><i class="bi bi-bell"></i></button>
                     <div class="d-flex align-items-center gap-2">
                         @* <img src="https://avatar.iran.liara.run/public/19" class="rounded-circle avatar-lg"> *@
                         <div class="text-end">

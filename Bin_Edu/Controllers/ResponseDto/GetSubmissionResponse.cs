@@ -8,6 +8,7 @@ namespace Bin_Edu.Controllers.ResponseDto
     public class GetSubmissionResponse
     {
         public int Id { get; set; }
+        public float? Score { get; set; }
         public string StudentName { get; set; }
         public DateOnly SubmittedAt { get; set; }
     }
