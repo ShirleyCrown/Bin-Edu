@@ -24,7 +24,7 @@ namespace Bin_Edu.Infrastructure.Database.Models
         public DateOnly OpeningDate { get; set; }
 
         public DateOnly EndDate { get; set; }
-        public byte[] ThumbNail { get; set; }
+        public byte[]? ThumbNail { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

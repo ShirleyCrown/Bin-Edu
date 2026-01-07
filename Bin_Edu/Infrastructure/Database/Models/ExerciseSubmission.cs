@@ -20,7 +20,7 @@ namespace Bin_Edu.Infrastructure.Database.Models
 
         public int CourseRegistrationId { get; set; }
 
-        public float Score { get; set; }
+        public float? Score { get; set; }
 
         public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
 
