@@ -35,9 +35,9 @@ builder.Services.AddControllersWithViews();
 
 
 // ================ COMMENT THIS WHEN IN PRODUCTION =================
-// Seeder Service
-builder.Services.AddScoped<SeederRunner>();
-builder.Services.AddHostedService<SeederHostedService>();
+// // Seeder Service
+// builder.Services.AddScoped<SeederRunner>();
+// builder.Services.AddHostedService<SeederHostedService>();
 // ================ COMMENT THIS WHEN IN PRODUCTION =================
 
 // Add cusom Application User Claims Principal Factory (For adding custom field to token)

@@ -42,14 +42,68 @@ namespace Bin_Edu.Controllers
             return View("~/Views/StudentManagement/GetStudents/WebPage.cshtml");
         }
 
+        // [HttpGet("admin/dashboard/student-management/get-students")]
+        // [Authorize(Roles = "ADMIN")]
+        // public async Task<IActionResult> GetStudentsAdminApi(
+        //     [FromQuery(Name = "page")] int page
+        // )
+        // {
+
+        //     List<GetStudentsAdminResponse> responseDto = (await _userManager.GetUsersInRoleAsync("STUDENT"))
+        //         .Select(c => new GetStudentsAdminResponse
+        //         {
+        //             Id = c.Id,
+        //             FullName = c.FullName,
+        //             Email = c.Email,
+        //             Dob = c.Dob,
+        //             PhoneNumber = c.PhoneNumber,
+        //             Grade = c.Grade,
+        //             School = c.School
+        //         })
+        //         .Skip(page * 10)
+        //         .Take(10)
+        //         .ToList();
+
+        //     int totalPages = (await _userManager.GetUsersInRoleAsync("STUDENT")).Count;
+
+        //     totalPages = (int)Math.Ceiling((double)totalPages / 10);
+
+        //     return Json(new ApiResponse<dynamic>
+        //     {
+        //         Message = "Get List of students successfully",
+        //         Data = new
+        //         {
+        //             Students = responseDto,
+        //             TotalPages = totalPages
+        //         }
+        //     });
+        // }
+
         [HttpGet("admin/dashboard/student-management/get-students")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetStudentsAdminApi(
-            [FromQuery(Name = "page")] int page
-        )
+    [FromQuery] int page,
+    [FromQuery] string? keyword
+)
         {
+            const int pageSize = 10;
 
-            List<GetStudentsAdminResponse> responseDto = (await _userManager.GetUsersInRoleAsync("STUDENT"))
+            var studentsQuery = (await _userManager.GetUsersInRoleAsync("STUDENT"))
+                .AsQueryable();
+
+            // 🔍 SEARCH BY FULL NAME
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                studentsQuery = studentsQuery
+                    .Where(s => s.FullName.Contains(keyword));
+            }
+
+            int totalItems = studentsQuery.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var responseDto = studentsQuery
+                .Skip(page * pageSize)
+                .Take(pageSize)
                 .Select(c => new GetStudentsAdminResponse
                 {
                     Id = c.Id,
@@ -60,15 +114,9 @@ namespace Bin_Edu.Controllers
                     Grade = c.Grade,
                     School = c.School
                 })
-                .Skip(page * 10)
-                .Take(10)
                 .ToList();
 
-            int totalPages = (await _userManager.GetUsersInRoleAsync("STUDENT")).Count;
-
-            totalPages = (int)Math.Ceiling((double)totalPages / 10);
-
-            return Json(new ApiResponse<dynamic>
+            return Json(new ApiResponse<object>
             {
                 Message = "Get List of students successfully",
                 Data = new
@@ -78,6 +126,7 @@ namespace Bin_Edu.Controllers
                 }
             });
         }
+
 
         [HttpPost("admin/dashboard/student-management/create-student")]
         [Authorize(Roles = "ADMIN")]

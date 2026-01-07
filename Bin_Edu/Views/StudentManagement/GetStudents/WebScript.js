@@ -1,42 +1,94 @@
 
+// async function fetchStudents(page = 0) {
+//     const courseTableBody = document.getElementById("studentTableBody");
+
+//     try {
+//         const response = await axios.get(`/admin/dashboard/student-management/get-students`, {
+//             params: {
+//                 "page": page
+//             },
+//         });
+//         const responseData = response.data.data;
+
+//         // Clear old rows before re-rendering
+//         courseTableBody.innerHTML = "";
+
+//         for (let i = 0; i < responseData.students.length; i++) {
+//             courseTableBody.innerHTML += `
+//                 <tr>
+//                     <td>${responseData.students[i].fullName}</td>
+//                     <td>${responseData.students[i].email}</td>
+//                     <td>${responseData.students[i].grade}</td>
+//                     <td>${responseData.students[i].phoneNumber}</td>
+//                     <td>${responseData.students[i].school}</td>
+//                     <td>${responseData.students[i].dob}</td>
+//                     <td>
+//                         <button class="btn btn-sm btn-light text-primary" onclick="initRegenPasswordModal('${responseData.students[i].id}')"><i class="bi bi-arrow-repeat"></i></button>
+//                         <button class="btn btn-sm btn-light text-danger" onclick="initDeleteModal('${responseData.students[i].id}')"><i class="bi bi-trash"></i></button>
+//                     </td>
+//                 </tr>
+//             `;
+//         }
+
+//         generatePagination(responseData.totalPages, page);
+
+//     } catch (ex) {
+//         console.log(ex);
+//     }
+// }
+
 async function fetchStudents(page = 0) {
-    const courseTableBody = document.getElementById("studentTableBody");
+    const studentTableBody = document.getElementById("studentTableBody");
+    const keyword = document.getElementById("studentKeyword").value;
 
     try {
-        const response = await axios.get(`/admin/dashboard/student-management/get-students`, {
-            params: {
-                "page": page
-            },
-        });
-        const responseData = response.data.data;
+        const response = await axios.get(
+            "/admin/dashboard/student-management/get-students",
+            {
+                params: {
+                    page: page,
+                    keyword: keyword
+                }
+            }
+        );
 
-        // Clear old rows before re-rendering
-        courseTableBody.innerHTML = "";
+        const data = response.data.data;
 
-        for (let i = 0; i < responseData.students.length; i++) {
-            courseTableBody.innerHTML += `
+        studentTableBody.innerHTML = "";
+
+        data.students.forEach(s => {
+            studentTableBody.innerHTML += `
                 <tr>
-                    <td>${responseData.students[i].fullName}</td>
-                    <td>${responseData.students[i].email}</td>
-                    <td>${responseData.students[i].grade}</td>
-                    <td>${responseData.students[i].phoneNumber}</td>
-                    <td>${responseData.students[i].school}</td>
-                    <td>${responseData.students[i].dob}</td>
+                    <td>${s.fullName}</td>
+                    <td>${s.email}</td>
+                    <td>${s.grade}</td>
+                    <td>${s.phoneNumber}</td>
+                    <td>${s.school}</td>
+                    <td>${s.dob}</td>
                     <td>
-                        <button class="btn btn-sm btn-light text-primary" onclick="initRegenPasswordModal('${responseData.students[i].id}')"><i class="bi bi-arrow-repeat"></i></button>
-                        <button class="btn btn-sm btn-light text-danger" onclick="initDeleteModal('${responseData.students[i].id}')"><i class="bi bi-trash"></i></button>
+                        <button class="btn btn-sm btn-light text-primary"
+                            onclick="initRegenPasswordModal('${s.id}')">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </button>
+                        <button class="btn btn-sm btn-light text-danger"
+                            onclick="initDeleteModal('${s.id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
                     </td>
                 </tr>
             `;
-        }
+        });
 
-        generatePagination(responseData.totalPages, page);
+        generatePagination(data.totalPages, page);
 
     } catch (ex) {
         console.log(ex);
     }
 }
 
+document
+  .getElementById("studentKeyword")
+  .addEventListener("input", () => fetchStudents(0));
 
 function generatePagination(totalPages, currentPage) {
     const pagination = document.getElementById("pagination");

@@ -1,46 +1,96 @@
 
-async function fetchCourses(page = 0) {
-    const courseTableBody = document.getElementById("courseTableBody");
+// async function fetchCourses(page = 0) {
+//     const courseTableBody = document.getElementById("courseTableBody");
 
-    try {
-        const response = await axios.get(`/admin/dashboard/course-management/get-courses`, {
-            params: {
-                "page": page
-            },
-        });
-        const responseData = response.data.data;
+//     try {
+//         const response = await axios.get(`/admin/dashboard/course-management/get-courses`, {
+//             params: {
+//                 "page": page
+//             },
+//         });
+//         const responseData = response.data.data;
 
-        console.log(response);
+//         console.log(response);
         
 
-        // Clear old rows before re-rendering
+//         // Clear old rows before re-rendering
+//         courseTableBody.innerHTML = "";
+
+//         for (let i = 0; i < responseData.courses.length; i++) {
+//             courseTableBody.innerHTML += `
+//                 <tr>
+//                     <td>${responseData.courses[i].courseTitle}</td>
+//                     <td>${responseData.courses[i].courseSubject}</td>
+//                     <td>${responseData.courses[i].teachingTeacherName}</td>
+//                     <td>${responseData.courses[i].coursePrice}</td>
+//                     <td>${responseData.courses[i].weekDuration}</td>
+//                     <td>${responseData.courses[i].numberOfStudents}</td>
+//                     <td>
+//                         <button class="btn btn-sm btn-light text-warning" onclick="initCourseSessionsModal(${responseData.courses[i].id})"><i class="bi bi-calendar-check"></i></button>
+//                         <button class="btn btn-sm btn-light text-primary" onclick="initTimetablesModal(${responseData.courses[i].id})"><i class="bi bi-calendar-range"></i></button>
+//                         <button class="btn btn-sm btn-light text-primary" onclick="initCreateTimetableModal(${responseData.courses[i].id})"><i class="bi bi-calendar-plus"></i></button>
+//                         <a class="btn btn-sm btn-light text-primary" href="/admin/dashboard/exercise-management/${responseData.courses[i].id}"><i class="bi bi-book"></i></a>
+//                         <button class="btn btn-sm btn-light" onclick="initUpdateModal(${responseData.courses[i].id})"><i class="bi bi-pencil"></i></button>
+//                         <button class="btn btn-sm btn-light text-danger" onclick="initDeleteModal(${responseData.courses[i].id})"><i class="bi bi-trash"></i></button>
+//                     </td>
+//                 </tr>
+//             `;
+//         }
+
+//         generatePagination(responseData.totalPages, page);
+
+//     } catch (ex) {
+//         console.log(ex);
+//     }
+// }
+
+async function fetchCourses(page = 0) {
+    const keyword = document.getElementById("keyword").value;
+    const subject = document.getElementById("subject").value;
+    const minPrice = document.getElementById("minPrice").value;
+    const maxPrice = document.getElementById("maxPrice").value;
+
+    try {
+        const response = await axios.get(
+            "/admin/dashboard/course-management/get-courses",
+            {
+                params: {
+                    page,
+                    keyword,
+                    subject,
+                    minPrice,
+                    maxPrice
+                }
+            }
+        );
+
+        const data = response.data.data;
+        const courses = data.courses;
+
         courseTableBody.innerHTML = "";
 
-        for (let i = 0; i < responseData.courses.length; i++) {
+        courses.forEach(c => {
             courseTableBody.innerHTML += `
                 <tr>
-                    <td>${responseData.courses[i].courseTitle}</td>
-                    <td>${responseData.courses[i].courseSubject}</td>
-                    <td>${responseData.courses[i].teachingTeacherName}</td>
-                    <td>${responseData.courses[i].coursePrice}</td>
-                    <td>${responseData.courses[i].weekDuration}</td>
-                    <td>${responseData.courses[i].numberOfStudents}</td>
+                    <td>${c.courseTitle}</td>
+                    <td>${c.courseSubject}</td>
+                    <td>${c.teachingTeacherName}</td>
+                    <td>${c.coursePrice}</td>
+                    <td>${c.weekDuration}</td>
+                    <td>${c.numberOfStudents}</td>
                     <td>
-                        <button class="btn btn-sm btn-light text-warning" onclick="initCourseSessionsModal(${responseData.courses[i].id})"><i class="bi bi-calendar-check"></i></button>
-                        <button class="btn btn-sm btn-light text-primary" onclick="initTimetablesModal(${responseData.courses[i].id})"><i class="bi bi-calendar-range"></i></button>
-                        <button class="btn btn-sm btn-light text-primary" onclick="initCreateTimetableModal(${responseData.courses[i].id})"><i class="bi bi-calendar-plus"></i></button>
-                        <a class="btn btn-sm btn-light text-primary" href="/admin/dashboard/exercise-management/${responseData.courses[i].id}"><i class="bi bi-book"></i></a>
-                        <button class="btn btn-sm btn-light" onclick="initUpdateModal(${responseData.courses[i].id})"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-sm btn-light text-danger" onclick="initDeleteModal(${responseData.courses[i].id})"><i class="bi bi-trash"></i></button>
+                        <button class="btn btn-sm btn-light" onclick="initUpdateModal(${c.id})">
+                            <i class="bi bi-pencil"></i>
+                        </button>
                     </td>
                 </tr>
             `;
-        }
+        });
 
-        generatePagination(responseData.totalPages, page);
+        generatePagination(data.totalPages, page);
 
-    } catch (ex) {
-        console.log(ex);
+    } catch (err) {
+        console.log(err);
     }
 }
 

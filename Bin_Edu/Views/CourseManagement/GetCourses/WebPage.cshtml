@@ -38,11 +38,28 @@
 <!-- TABLE -->
 <div class="card">
     <div class="card-header d-flex justify-content-between">
-        <input class="form-control w-25" placeholder="Search students...">
+        @* <input class="form-control w-25" placeholder="Search students..."> *@
+        <div class="d-flex gap-2 justify-content-between" style="padding-left: 0 !important;">
+            <input id="keyword" class="form-control" placeholder="Search course title...">
+
+            <select id="subject" class="form-select">
+                <option value="">All Subjects</option>
+                <option value="Math">Math</option>
+                <option value="English">English</option>
+                <option value="Literature">Literature</option>
+            </select>
+
+            <input id="minPrice" type="number" class="form-control" placeholder="Min Price">
+            <input id="maxPrice" type="number" class="form-control" placeholder="Max Price">
+
+            <button class="btn btn-primary" onclick="fetchCourses(0)">Filter</button>
+        </div>
 
         <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createCourseModal">
             <i class="bi bi-plus-square"></i> Create Course
         </button>
+
+
     </div>
 
     <div class="table-responsive">
@@ -60,7 +77,7 @@
             </thead>
 
             <tbody id="courseTableBody">
-                
+
             </tbody>
         </table>
     </div>
@@ -69,7 +86,7 @@
     <div class="card-footer d-flex justify-content-center">
         <nav>
             <ul class="pagination mb-0" id="pagination">
-               
+
             </ul>
         </nav>
     </div>
