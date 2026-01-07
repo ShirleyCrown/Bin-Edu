@@ -28,8 +28,8 @@ namespace Bin_Edu.Controllers
         {
             _context = context;
         }
-        
-        
+
+
 
         [HttpGet("admin/dashboard/course-management")]
         [Authorize(Roles = "ADMIN")]
@@ -38,72 +38,133 @@ namespace Bin_Edu.Controllers
             return View("~/Views/CourseManagement/GetCourses/WebPage.cshtml");
         }
 
+        // [HttpGet("admin/dashboard/course-management/get-courses")]
+        // [Authorize(Roles = "ADMIN")]
+        // public async Task<IActionResult> GetCoursesAdminApi(
+        //     [FromQuery(Name = "page")] int page 
+        // )
+        // {
+
+        //     List<Course> query = await _context.Courses
+        //         .Select(c => new Course
+        //         {
+        //             Id = c.Id,
+        //             CourseTitle = c.CourseTitle,
+        //             CourseSubject = c.CourseSubject,
+        //             TeachingTeacherName = c.TeachingTeacherName,
+        //             CoursePrice = c.CoursePrice,
+        //             OpeningDate = c.OpeningDate,
+        //             EndDate = c.EndDate,
+        //             CourseRegistrations = c.CourseRegistrations
+        //         })
+        //         .Skip(page * 10)
+        //         .Take(10)
+        //         .ToListAsync();
+
+
+        //     List<GetCoursesAdminResponse> responseDto = new List<GetCoursesAdminResponse>();
+        //     foreach (var queryData in query)
+        //     {
+
+        //         DateTime openDt = queryData.OpeningDate.ToDateTime(TimeOnly.MinValue);
+        //         DateTime endDt = queryData.EndDate.ToDateTime(TimeOnly.MinValue);
+
+        //         // Get difference
+        //         TimeSpan diff = endDt - openDt;
+
+        //         // Full weeks
+        //         int weeks = diff.Days / 7;
+
+        //         GetCoursesAdminResponse responseData = new GetCoursesAdminResponse
+        //         {
+        //             Id = queryData.Id,
+        //             CourseTitle = queryData.CourseTitle,
+        //             CourseSubject = queryData.CourseSubject,
+        //             TeachingTeacherName = queryData.TeachingTeacherName,
+        //             CoursePrice = queryData.CoursePrice,
+        //             NumberOfStudents = queryData.CourseRegistrations.Count,
+        //             WeekDuration = weeks
+        //         };
+
+        //         responseDto.Add(responseData);
+        //     }
+
+
+        //     int totalPages = await _context.Courses.CountAsync();
+
+        //     totalPages = (int) Math.Ceiling((double) totalPages / 10);
+
+        //     return Json(new ApiResponse<dynamic>
+        //     {
+        //         Message = "Get List of courses successfully",
+        //         Data = new
+        //         {
+        //             Courses = responseDto, 
+        //             TotalPages = totalPages
+        //         }
+        //     });
+        // }
+
         [HttpGet("admin/dashboard/course-management/get-courses")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> GetCoursesAdminApi(
-            [FromQuery(Name = "page")] int page 
-        )
+        public async Task<IActionResult> GetCoursesAdminApi([FromQuery] CourseFilterRequest req)
         {
 
-            List<Course> query = await _context.Courses
-                .Select(c => new Course
+            Console.WriteLine("Subject: " + req.Subject ?? "None");
+            const int pageSize = 10;
+
+            IQueryable<Course> query = _context.Courses;
+
+            // 🔍 SEARCH
+            if (!string.IsNullOrWhiteSpace(req.Keyword))
+            {
+                query = query.Where(c =>
+                    c.CourseTitle.Contains(req.Keyword));
+            }
+
+            // 📚 FILTER SUBJECT
+            if (!string.IsNullOrWhiteSpace(req.Subject))
+            {
+                query = query.Where(c => c.CourseSubject == req.Subject);
+            }
+
+            // 💰 FILTER PRICE
+            if (req.MinPrice.HasValue)
+                query = query.Where(c => c.CoursePrice >= req.MinPrice);
+
+            if (req.MaxPrice.HasValue)
+                query = query.Where(c => c.CoursePrice <= req.MaxPrice);
+
+            int totalItems = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var courses = await query
+                .Skip(req.Page * pageSize)
+                .Take(pageSize)
+                .Select(c => new GetCoursesAdminResponse
                 {
                     Id = c.Id,
                     CourseTitle = c.CourseTitle,
                     CourseSubject = c.CourseSubject,
                     TeachingTeacherName = c.TeachingTeacherName,
                     CoursePrice = c.CoursePrice,
-                    OpeningDate = c.OpeningDate,
-                    EndDate = c.EndDate,
-                    CourseRegistrations = c.CourseRegistrations
+                    NumberOfStudents = c.CourseRegistrations.Count,
+                    WeekDuration = (c.EndDate.ToDateTime(TimeOnly.MinValue)
+                                    - c.OpeningDate.ToDateTime(TimeOnly.MinValue)).Days / 7
                 })
-                .Skip(page * 10)
-                .Take(10)
                 .ToListAsync();
 
-
-            List<GetCoursesAdminResponse> responseDto = new List<GetCoursesAdminResponse>();
-            foreach (var queryData in query)
-            {
-
-                DateTime openDt = queryData.OpeningDate.ToDateTime(TimeOnly.MinValue);
-                DateTime endDt = queryData.EndDate.ToDateTime(TimeOnly.MinValue);
-
-                // Get difference
-                TimeSpan diff = endDt - openDt;
-
-                // Full weeks
-                int weeks = diff.Days / 7;
-
-                GetCoursesAdminResponse responseData = new GetCoursesAdminResponse
-                {
-                    Id = queryData.Id,
-                    CourseTitle = queryData.CourseTitle,
-                    CourseSubject = queryData.CourseSubject,
-                    TeachingTeacherName = queryData.TeachingTeacherName,
-                    CoursePrice = queryData.CoursePrice,
-                    NumberOfStudents = queryData.CourseRegistrations.Count,
-                    WeekDuration = weeks
-                };
-
-                responseDto.Add(responseData);
-            }
-                
-
-            int totalPages = await _context.Courses.CountAsync();
-
-            totalPages = (int) Math.Ceiling((double) totalPages / 10);
-
-            return Json(new ApiResponse<dynamic>
+            return Json(new ApiResponse<object>
             {
                 Message = "Get List of courses successfully",
                 Data = new
                 {
-                    Courses = responseDto, 
+                    Courses = courses,
                     TotalPages = totalPages
                 }
             });
         }
+
 
 
         [HttpPost("admin/dashboard/course-management/create-course")]
@@ -192,7 +253,7 @@ namespace Bin_Edu.Controllers
 
             // 4. OPENING DATE GEATER THAN END DATE 
             bool openValid = DateOnly.TryParse(requestDto.OpeningDate, out DateOnly openingDate);
-            bool endValid  = DateOnly.TryParse(requestDto.EndDate, out DateOnly endDate);
+            bool endValid = DateOnly.TryParse(requestDto.EndDate, out DateOnly endDate);
 
             if (openingDate > endDate)
                 return BadRequest(new ApiResponse<dynamic>
@@ -228,7 +289,7 @@ namespace Bin_Edu.Controllers
         [HttpGet("admin/dashboard/course-management/get-course/{course_id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetCourseAdminApi(
-            [FromRoute(Name = "course_id")] int courseId 
+            [FromRoute(Name = "course_id")] int courseId
         )
         {
 
@@ -331,8 +392,8 @@ namespace Bin_Edu.Controllers
 
             // 3. COURSE TITLE UNIQUE CHECK (EF CORE)
             bool titleExists = await _context.Courses
-                .AnyAsync(x => 
-                    x.Id != courseId && 
+                .AnyAsync(x =>
+                    x.Id != courseId &&
                     x.CourseTitle == requestDto.UpdateCourseTitle
                 );
 
@@ -345,7 +406,7 @@ namespace Bin_Edu.Controllers
 
             // 4. OPENING DATE GEATER THAN END DATE 
             bool openValid = DateOnly.TryParse(requestDto.UpdateOpeningDate, out DateOnly openingDate);
-            bool endValid  = DateOnly.TryParse(requestDto.UpdateEndDate, out DateOnly endDate);
+            bool endValid = DateOnly.TryParse(requestDto.UpdateEndDate, out DateOnly endDate);
 
             if (openingDate > endDate)
                 return BadRequest(new ApiResponse<dynamic>
@@ -388,7 +449,7 @@ namespace Bin_Edu.Controllers
 
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
-            
+
 
             return Json(
                 new ApiResponse<dynamic>
@@ -464,10 +525,10 @@ namespace Bin_Edu.Controllers
 
             // 2. TIMETABLE UNIQUE CHECK (EF CORE)
             bool timetableExisted = await _context.CourseTimetables
-                .AnyAsync(ct => 
-                    ct.CourseId == courseId && 
-                    ct.DayOfWeek == requestDto.DayOfWeek && 
-                    ct.StartTime == startTime && 
+                .AnyAsync(ct =>
+                    ct.CourseId == courseId &&
+                    ct.DayOfWeek == requestDto.DayOfWeek &&
+                    ct.StartTime == startTime &&
                     ct.EndTime == endTime
                 );
 
@@ -477,16 +538,16 @@ namespace Bin_Edu.Controllers
                     Data = "Timetable already exists.",
                     Message = "Timetable already exists."
                 });
-            
+
 
             Course? course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == courseId);
-            DayOfWeek dayOfWeek = 
-                requestDto.DayOfWeek == "Monday"    ? DayOfWeek.Monday :
-                requestDto.DayOfWeek == "Tuesday"   ? DayOfWeek.Tuesday :
+            DayOfWeek dayOfWeek =
+                requestDto.DayOfWeek == "Monday" ? DayOfWeek.Monday :
+                requestDto.DayOfWeek == "Tuesday" ? DayOfWeek.Tuesday :
                 requestDto.DayOfWeek == "Wednesday" ? DayOfWeek.Wednesday :
-                requestDto.DayOfWeek == "Thursday"  ? DayOfWeek.Thursday :
-                requestDto.DayOfWeek == "Friday"    ? DayOfWeek.Friday :
-                requestDto.DayOfWeek == "Saturday"  ? DayOfWeek.Saturday :
+                requestDto.DayOfWeek == "Thursday" ? DayOfWeek.Thursday :
+                requestDto.DayOfWeek == "Friday" ? DayOfWeek.Friday :
+                requestDto.DayOfWeek == "Saturday" ? DayOfWeek.Saturday :
                 DayOfWeek.Sunday;
 
             List<DateOnly> courseStartDates = this.GetDatesByDayOfWeek(course.OpeningDate, course.EndDate, dayOfWeek);
@@ -523,7 +584,7 @@ namespace Bin_Edu.Controllers
         }
 
 
-        
+
         [HttpGet("admin/dashboard/course-management/get-course-sessions/{course_id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetCourseSessions(
