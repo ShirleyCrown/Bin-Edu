@@ -2,7 +2,7 @@
 async function createCourse() {
     
 
-    const alertBox = document.querySelector(".alert-danger");
+    const alertBox = document.querySelector("#create-alert");
     alertBox.classList.add("d-none");
 
     try {
@@ -24,13 +24,11 @@ async function createCourse() {
         
         if (ex.response && ex.response.data.message) {
 
-            const errorMessage = ex.response.data.message;
+            const errorMessage = ex.response.data.message;            
 
             const createCourseErrorMessage = document.getElementById("createCourseErrorMessage");
 
             createCourseErrorMessage.innerHTML = `<strong>Validation Error:</strong> ${errorMessage}`;
-
-            
 
 
             alertBox.classList.remove("d-none");

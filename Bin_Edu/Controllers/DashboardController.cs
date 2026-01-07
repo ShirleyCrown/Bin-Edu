@@ -33,10 +33,10 @@ namespace Bin_Edu.Controllers
         {
             int totalCourses = await _context.Courses.CountAsync();
 
-            int totalStudents = await _context.CourseRegistrations
-                .Select(r => r.StudentId)
+            int totalStudents = await _context.Users
+                .Select(r => r.Id)
                 .Distinct()
-                .CountAsync();
+                .CountAsync() - 1;
 
             var monthlyRevenue = await _context.CourseRegistrations
                 .Where(r => r.RegisteredAt.Year == year)
