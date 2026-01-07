@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,8 +18,6 @@ namespace Bin_Edu.Infrastructure.Database.Models
 
         public string CourseDescription { get; set; }
 
-        public string CourseSubject { get; set; }
-
         public long CoursePrice { get; set; }
 
         public DateOnly OpeningDate { get; set; }
@@ -30,7 +29,13 @@ namespace Bin_Edu.Infrastructure.Database.Models
 
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
+
+
         // Navigation
+        [ForeignKey("Subject")]
+        public int SubjectId { get; set; }
+        public Subject Subject { get; set; }
+
         public ICollection<CourseTimetable> CourseTimetables { get; set; }
         public ICollection<CourseExercise> CourseExercises { get; set; }
         public ICollection<CourseRegistration> CourseRegistrations { get; set; }

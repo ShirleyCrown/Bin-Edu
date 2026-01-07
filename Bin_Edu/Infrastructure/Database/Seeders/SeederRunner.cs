@@ -34,10 +34,11 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
 
             await GenerateRoleData();
             await GenerateUserData();
+            await GenerateSubjectData();
             await GenerateCourseData();
-            await GenerateCourseExerciseData();
-            await GenerateCourseRegistrationData();
-            await GenerateExerciseSubmissionData();
+            // await GenerateCourseExerciseData();
+            // await GenerateCourseRegistrationData();
+            // await GenerateExerciseSubmissionData();
 
             Console.WriteLine("✅ Seeder completed successfully!");
         }
@@ -139,11 +140,11 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
             await _userManager.AddToRoleAsync(admin, "ADMIN");
 
             // ===== STUDENTS =====
-            for (int i = 1; i <= 10; i++)
+            for (int i = 1; i <= 5; i++)
             {
                 var student = new AppUser
                 {
-                    UserName = $"student{i}",
+                    UserName = $"student{i}@example.com",
                     Email = $"student{i}@example.com",
                     FullName = $"Sinh viên {i}",
                     PhoneNumber = $"09000000{i}",
@@ -165,6 +166,24 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
         }
 
 
+        // // ================================================================
+        // // USERS
+        // // ================================================================
+        private async Task GenerateSubjectData()
+        {
+            var subjects = new List<Subject>
+            {
+                new Subject { SubjectName = "Math", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
+                new Subject { SubjectName = "English", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
+                new Subject { SubjectName = "Literature", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
+            };
+
+            await _context.Subjects.AddRangeAsync(subjects);
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine("Subjects generated.");
+        }
+
 
         // // ================================================================
         // // COURSES
@@ -179,101 +198,101 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     TeachingTeacherName = "Nguyen Van An",
                     CourseTitle = "Basic Algebra",
                     CourseDescription = "Learn foundational algebra concepts and problem-solving skills.",
-                    CourseSubject = "Math",
+                    Subject = _context.Subjects.FirstOrDefault(s => s.SubjectName == "Math"),
                     CoursePrice = 1200000,
                     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
                     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7)
                 },
-                new Course
-                {
-                    TeachingTeacherName = "Tran Thi Bich",
-                    CourseTitle = "Geometry Mastery",
-                    CourseDescription = "Understand shapes, angles, and geometric proofs.",
-                    CourseSubject = "Math",
-                    CoursePrice = 1500000,
-                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
-                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(12 * 7)
-                },
-                new Course
-                {
-                    TeachingTeacherName = "Le Thanh Hai",
-                    CourseTitle = "English Grammar for Beginners",
-                    CourseDescription = "Master basic English grammar rules and sentence structures.",
-                    CourseSubject = "English",
-                    CoursePrice = 1000000,
-                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
-                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(20 * 7)
-                },
-                new Course
-                {
-                    TeachingTeacherName = "Pham Minh Chau",
-                    CourseTitle = "Spoken English Essentials",
-                    CourseDescription = "Improve daily communication and pronunciation skills.",
-                    CourseSubject = "English",
-                    CoursePrice = 1800000,
-                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
-                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(15 * 7)
-                },
-                new Course
-                {
-                    TeachingTeacherName = "Vo Hoang Long",
-                    CourseTitle = "Advanced English Writing",
-                    CourseDescription = "Learn to write essays, reports, and professional emails.",
-                    CourseSubject = "English",
-                    CoursePrice = 2000000,
-                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
-                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(12 * 7)
-                },
-                new Course
-                {
-                    TeachingTeacherName = "Nguyen Thi Lan",
-                    CourseTitle = "Vietnamese Literature Basics",
-                    CourseDescription = "Explore classic Vietnamese literary works and writers.",
-                    CourseSubject = "Literature",
-                    CoursePrice = 900000,
-                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
-                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(17 * 7)
-                },
-                new Course
-                {
-                    TeachingTeacherName = "Do Quang Minh",
-                    CourseTitle = "Modern Literature Analysis",
-                    CourseDescription = "Analyze modern novels, poems, and short stories.",
-                    CourseSubject = "Literature",
-                    CoursePrice = 1400000,
-                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
-                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(16 * 7)
-                },
-                new Course
-                {
-                    TeachingTeacherName = "Bui Thu Ha",
-                    CourseTitle = "Trigonometry Made Easy",
-                    CourseDescription = "Learn sine, cosine, tangent, and practical applications.",
-                    CourseSubject = "Math",
-                    CoursePrice = 1600000,
-                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
-                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7)
-                },
-                new Course
-                {
-                    TeachingTeacherName = "Pham Duc Khang",
-                    CourseTitle = "IELTS English Preparation",
-                    CourseDescription = "Full preparation for all four IELTS skills.",
-                    CourseSubject = "English",
-                    CoursePrice = 3200000,
-                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
-                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7)
-                },
-                new Course
-                {
-                    TeachingTeacherName = "Ngo Thi Mai",
-                    CourseTitle = "Poetry Appreciation",
-                    CourseDescription = "Understand and enjoy poetry through guided analysis.",
-                    CourseSubject = "Literature",
-                    CoursePrice = 1100000,
-                    OpeningDate = DateOnly.FromDateTime(DateTime.Today),
-                    EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7)
-                }
+                // new Course
+                // {
+                //     TeachingTeacherName = "Tran Thi Bich",
+                //     CourseTitle = "Geometry Mastery",
+                //     CourseDescription = "Understand shapes, angles, and geometric proofs.",
+                //     CourseSubject = "Math",
+                //     CoursePrice = 1500000,
+                //     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                //     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(12 * 7)
+                // },
+                // new Course
+                // {
+                //     TeachingTeacherName = "Le Thanh Hai",
+                //     CourseTitle = "English Grammar for Beginners",
+                //     CourseDescription = "Master basic English grammar rules and sentence structures.",
+                //     CourseSubject = "English",
+                //     CoursePrice = 1000000,
+                //     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                //     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(20 * 7)
+                // },
+                // new Course
+                // {
+                //     TeachingTeacherName = "Pham Minh Chau",
+                //     CourseTitle = "Spoken English Essentials",
+                //     CourseDescription = "Improve daily communication and pronunciation skills.",
+                //     CourseSubject = "English",
+                //     CoursePrice = 1800000,
+                //     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                //     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(15 * 7)
+                // },
+                // new Course
+                // {
+                //     TeachingTeacherName = "Vo Hoang Long",
+                //     CourseTitle = "Advanced English Writing",
+                //     CourseDescription = "Learn to write essays, reports, and professional emails.",
+                //     CourseSubject = "English",
+                //     CoursePrice = 2000000,
+                //     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                //     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(12 * 7)
+                // },
+                // new Course
+                // {
+                //     TeachingTeacherName = "Nguyen Thi Lan",
+                //     CourseTitle = "Vietnamese Literature Basics",
+                //     CourseDescription = "Explore classic Vietnamese literary works and writers.",
+                //     CourseSubject = "Literature",
+                //     CoursePrice = 900000,
+                //     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                //     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(17 * 7)
+                // },
+                // new Course
+                // {
+                //     TeachingTeacherName = "Do Quang Minh",
+                //     CourseTitle = "Modern Literature Analysis",
+                //     CourseDescription = "Analyze modern novels, poems, and short stories.",
+                //     CourseSubject = "Literature",
+                //     CoursePrice = 1400000,
+                //     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                //     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(16 * 7)
+                // },
+                // new Course
+                // {
+                //     TeachingTeacherName = "Bui Thu Ha",
+                //     CourseTitle = "Trigonometry Made Easy",
+                //     CourseDescription = "Learn sine, cosine, tangent, and practical applications.",
+                //     CourseSubject = "Math",
+                //     CoursePrice = 1600000,
+                //     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                //     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7)
+                // },
+                // new Course
+                // {
+                //     TeachingTeacherName = "Pham Duc Khang",
+                //     CourseTitle = "IELTS English Preparation",
+                //     CourseDescription = "Full preparation for all four IELTS skills.",
+                //     CourseSubject = "English",
+                //     CoursePrice = 3200000,
+                //     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                //     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7)
+                // },
+                // new Course
+                // {
+                //     TeachingTeacherName = "Ngo Thi Mai",
+                //     CourseTitle = "Poetry Appreciation",
+                //     CourseDescription = "Understand and enjoy poetry through guided analysis.",
+                //     CourseSubject = "Literature",
+                //     CoursePrice = 1100000,
+                //     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
+                //     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7)
+                // }
             };
 
 

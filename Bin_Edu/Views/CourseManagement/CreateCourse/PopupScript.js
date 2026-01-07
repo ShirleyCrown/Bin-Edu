@@ -1,4 +1,30 @@
 
+
+async function fetchSubjects() {
+
+    const courseSubjectSelect = document.getElementById("CourseSubject");
+
+    try {
+
+        const response = await axios.get(`/subjects`);
+
+        const subjects = response.data;
+        
+
+        courseSubjectSelect.innerHTML = `<option value="" selected>Select subject</option>`;
+        subjects.forEach(subject => {
+            const option = document.createElement("option");
+            option.value = subject.id;
+            option.text = subject.subjectName;
+            courseSubjectSelect.appendChild(option);
+        })
+
+    }
+    catch (ex) {
+        console.log(ex);
+    }
+}
+
 async function createCourse() {
     
 
@@ -36,3 +62,8 @@ async function createCourse() {
         }
     }
 }
+
+
+
+// CALL FUNCTIONS
+fetchSubjects();
