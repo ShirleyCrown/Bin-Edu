@@ -16,15 +16,15 @@
 //         for (let i = 0; i < responseData.students.length; i++) {
 //             courseTableBody.innerHTML += `
 //                 <tr>
-//                     <td>${responseData.students[i].fullName}</td>
-//                     <td>${responseData.students[i].email}</td>
-//                     <td>${responseData.students[i].grade}</td>
-//                     <td>${responseData.students[i].phoneNumber}</td>
-//                     <td>${responseData.students[i].school}</td>
-//                     <td>${responseData.students[i].dob}</td>
+//                     <td>${s.fullName}</td>
+//                     <td>${s.email}</td>
+//                     <td>${s.grade}</td>
+//                     <td>${s.phoneNumber}</td>
+//                     <td>${s.school}</td>
+//                     <td>${s.dob}</td>
 //                     <td>
-//                         <button class="btn btn-sm btn-light text-primary" onclick="initRegenPasswordModal('${responseData.students[i].id}')"><i class="bi bi-arrow-repeat"></i></button>
-//                         <button class="btn btn-sm btn-light text-danger" onclick="initDeleteModal('${responseData.students[i].id}')"><i class="bi bi-trash"></i></button>
+//                         <button class="btn btn-sm btn-light text-primary" onclick="initRegenPasswordModal('${s.id}')"><i class="bi bi-arrow-repeat"></i></button>
+//                         <button class="btn btn-sm btn-light text-danger" onclick="initDeleteModal('${s.id}')"><i class="bi bi-trash"></i></button>
 //                     </td>
 //                 </tr>
 //             `;
@@ -66,8 +66,8 @@ async function fetchStudents(page = 0) {
                     <td>${s.school}</td>
                     <td>${s.dob}</td>
                     <td>
-                        <a class="btn btn-sm btn-light text-primary" title="Reset Password" onclick="initRegenPasswordModal('${responseData.students[i].id}')"><i class="bi bi-arrow-repeat"></i></a>
-                        <a class="btn btn-sm btn-light text-danger" title="Delete Student" onclick="initDeleteModal('${responseData.students[i].id}')"><i class="bi bi-trash"></i></a>
+                        <a class="btn btn-sm btn-light text-primary" title="Reset Password" onclick="initRegenPasswordModal('${s.id}')"><i class="bi bi-arrow-repeat"></i></a>
+                        <a class="btn btn-sm btn-light text-danger" title="Delete Student" onclick="initDeleteModal('${s.id}')"><i class="bi bi-trash"></i></a>
                     </td>
                 </tr>
             `;
