@@ -601,6 +601,8 @@ namespace Bin_Edu.Controllers
                     DayOfWeek = ct.DayOfWeek,
                     StartDate = ct.StartDate,
                     StartTime = ct.StartTime,
+                    TotalPresent = ct.CourseAttendances.Count(ca => ca.Status == "Present"),
+                    TotalAbsent = ct.CourseAttendances.Count(ca => ca.Status == "Absent"),
                     EndTime = ct.EndTime
                 })
                 .ToListAsync();
@@ -610,6 +612,130 @@ namespace Bin_Edu.Controllers
             {
                 Message = "Get course sessions successfully",
                 Data = responseDto
+            });
+        }
+
+
+        [HttpGet("admin/dashboard/course-management/course-sessions/{course_id}/get-attendances/{course_timetable_id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetCourseAttendances(
+            [FromRoute(Name = "course_id")] int courseId,
+            [FromRoute(Name = "course_timetable_id")] int courseTimetableId
+        )
+        {
+            List<GetAttendancesAdminResponse> responseDto = await _context.CourseRegistrations
+                .Where(cr => cr.CourseId == courseId)
+                .Select(cr => new GetAttendancesAdminResponse
+                {
+                    StudentId = cr.StudentId,
+                    StudentFullName = cr.Student.FullName,
+                    AttendanceStatus = cr.CourseAttendances
+                        .Where(ca => ca.CourseTimetableId == courseTimetableId)
+                        .Select(ca => ca.Status)
+                        .FirstOrDefault(),
+                    AttendedAt = cr.CourseAttendances
+                        .Where(ca => ca.CourseTimetableId == courseTimetableId)
+                        .Select(ca => ca.AttendedAt)
+                        .FirstOrDefault()
+                        .ToString("dd/MM/yyyy")
+                })
+                .ToListAsync();
+
+
+            return Json(new ApiResponse<List<GetAttendancesAdminResponse>>
+            {
+                Message = "Get course attendances successfully",
+                Data = responseDto
+            });
+        }
+
+
+        [HttpPost("admin/dashboard/course-management/course-sessions/{course_timetable_id}/mark-present/{student_id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> MarkStudentPresent(
+            [FromRoute(Name = "course_timetable_id")] int courseTimetableId,
+            [FromRoute(Name = "student_id")] string studentId
+        )
+        {
+            CourseAttendance? attendance = await _context.CourseAttendances
+                .Include(ca => ca.CourseRegistration)
+                .FirstOrDefaultAsync(ca =>
+                    ca.CourseTimetableId == courseTimetableId &&
+                    ca.CourseRegistration.StudentId == studentId
+                );
+
+            if (attendance == null)
+            {
+                attendance = new CourseAttendance
+                {
+                    CourseTimetableId = courseTimetableId,
+                    CourseRegistrationId = _context.CourseRegistrations
+                        .Where(cr => cr.StudentId == studentId)
+                        .Select(cr => cr.Id)
+                        .FirstOrDefault(),
+                    Status = "Present",
+                    AttendedAt = DateTime.UtcNow
+                };
+
+                _context.CourseAttendances.Add(attendance);
+            }
+            else
+            {
+                attendance.Status = "Present";
+                attendance.AttendedAt = DateTime.UtcNow;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Json(new ApiResponse<object>
+            {
+                Message = "Marked student as present successfully",
+                Data = null
+            });
+        }
+
+
+         [HttpPost("admin/dashboard/course-management/course-sessions/{course_timetable_id}/mark-absent/{student_id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> MarkStudentAbsent(
+            [FromRoute(Name = "course_timetable_id")] int courseTimetableId,
+            [FromRoute(Name = "student_id")] string studentId
+        )
+        {
+            CourseAttendance? attendance = await _context.CourseAttendances
+                .Include(ca => ca.CourseRegistration)
+                .FirstOrDefaultAsync(ca =>
+                    ca.CourseTimetableId == courseTimetableId &&
+                    ca.CourseRegistration.StudentId == studentId
+                );
+
+            if (attendance == null)
+            {
+                attendance = new CourseAttendance
+                {
+                    CourseTimetableId = courseTimetableId,
+                    CourseRegistrationId = _context.CourseRegistrations
+                        .Where(cr => cr.StudentId == studentId)
+                        .Select(cr => cr.Id)
+                        .FirstOrDefault(),
+                    Status = "Absent",
+                    AttendedAt = DateTime.UtcNow
+                };
+
+                _context.CourseAttendances.Add(attendance);
+            }
+            else
+            {
+                attendance.Status = "Absent";
+                attendance.AttendedAt = DateTime.UtcNow;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Json(new ApiResponse<object>
+            {
+                Message = "Marked student as absent successfully",
+                Data = null
             });
         }
 

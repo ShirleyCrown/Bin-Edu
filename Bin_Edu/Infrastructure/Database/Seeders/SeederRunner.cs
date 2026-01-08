@@ -37,7 +37,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
             await GenerateSubjectData();
             await GenerateCourseData();
             // await GenerateCourseExerciseData();
-            // await GenerateCourseRegistrationData();
+            await GenerateCourseRegistrationData();
             // await GenerateExerciseSubmissionData();
 
             Console.WriteLine("✅ Seeder completed successfully!");

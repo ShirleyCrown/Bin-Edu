@@ -37,8 +37,11 @@ async function fetchCourseSessions() {
                     <td>${responseData[i].startDate}</td>
                     <td>${responseData[i].startTime.substring(0, 5)}</td>
                     <td>${responseData[i].endTime.substring(0, 5)}</td>
+                    <td>${responseData[i].totalPresent}</td>
+                    <td>${responseData[i].totalAbsent}</td>
                      <td>
                         <button class="btn btn-sm btn-light text-warning" onclick="showAttendanceQR(${responseData[i].id})"><i class="bi bi-qr-code"></i></button>
+                        <button class="btn btn-sm btn-light text-primary" onclick="initAttendancesModal(${responseData[i].id})"><i class="bi bi-people-fill"></i></button>
                     </td>
                 </tr>
             `;
