@@ -27,5 +27,7 @@ namespace Bin_Edu.Infrastructure.Database.Models
 
         // Navigation
         public Course Course { get; set; }
+
+        public ICollection<CourseAttendance> CourseAttendances { get; set; }
     }
 }

@@ -14,6 +14,10 @@ namespace Bin_Edu.Controllers.ResponseDto
 
         public TimeOnly StartTime { get; set; }
 
+        public int TotalPresent { get; set; }
+
+        public int TotalAbsent { get; set; }
+
         public TimeOnly EndTime { get; set; }
     }
 }

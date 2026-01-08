@@ -25,6 +25,7 @@ namespace Bin_Edu.Infrastructure
         public DbSet<CourseTimetable> CourseTimetables { get; set; }
         public DbSet<CourseRegistration> CourseRegistrations { get; set; }
         public DbSet<CourseExercise> CourseExercises { get; set; }
+        public DbSet<CourseAttendance> CourseAttendances { get; set; }
         public DbSet<ExerciseSubmission> ExerciseSubmissions { get; set; }
         public DbSet<CoursePayment> CoursePayments { get; set; }
 
@@ -45,6 +46,19 @@ namespace Bin_Edu.Infrastructure
                 .WithMany(ce => ce.ExerciseSubmissions)
                 .HasForeignKey(es => es.CourseExerciseId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.Entity<CourseAttendance>()
+                .HasOne(ca => ca.CourseTimetable)
+                .WithMany(ct => ct.CourseAttendances)
+                .HasForeignKey(ca => ca.CourseTimetableId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<CourseAttendance>()
+                .HasOne(ca => ca.CourseRegistration)
+                .WithMany(cr => cr.CourseAttendances)
+                .HasForeignKey(ca => ca.CourseRegistrationId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
         }
     }
 }

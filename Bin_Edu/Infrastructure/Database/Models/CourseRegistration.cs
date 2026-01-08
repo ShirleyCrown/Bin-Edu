@@ -22,5 +22,6 @@ namespace Bin_Edu.Infrastructure.Database.Models
         public Course Course { get; set; }
         public ICollection<ExerciseSubmission> ExerciseSubmissions { get; set; }
         public ICollection<CoursePayment> CoursePayments { get; set; }
+        public ICollection<CourseAttendance> CourseAttendances { get; set; }
     }
 }

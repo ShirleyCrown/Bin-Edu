@@ -1,8 +1,8 @@
-<div class="modal modal-xl fade" id="getCourseSessionsModal" tabindex="-1" aria-labelledby="getCourseSessionsModalLabel" aria-hidden="true">
+<div class="modal modal-xl fade" id="getAttendancesModal" tabindex="-1" aria-labelledby="getAttendancesModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="getCourseSessionsModalLabel">List CourseSessions</h1>
+                <h1 class="modal-title fs-5" id="getAttendancesModalLabel">List Attendances</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -11,17 +11,14 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Day of week</th>
-                                <th>Start date</th>
-                                <th>Start time</th>
-                                <th>End time</th>
-                                <th>Total present</th>
-                                <th>Total absent</th>
+                                <th>Student Full Name</th>
+                                <th>Attendance Status</th>
+                                <th>Attendance At</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
 
-                        <tbody id="courseSessionTableBody">
+                        <tbody id="attendancesTableBody">
                             
                         </tbody>
                     </table>
