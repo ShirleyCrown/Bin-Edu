@@ -332,7 +332,8 @@ namespace Bin_Edu.Controllers
                     CoursePrice = c.CoursePrice,
                     NumberOfStudents = c.CourseRegistrations.Count,
                     OpeningDate = c.OpeningDate,
-                    EndDate = c.EndDate
+                    EndDate = c.EndDate,
+                    ThumbNail = c.ThumbNail
                 })
                 .FirstOrDefaultAsync(c => c.Id == courseId);
 
@@ -454,6 +455,27 @@ namespace Bin_Edu.Controllers
             course.OpeningDate = openingDate;
             course.EndDate = endDate;
 
+            if (requestDto.UpdateThumbNail != null && requestDto.UpdateThumbNail.Length > 0)
+            {
+                var ext = Path.GetExtension(requestDto.UpdateThumbNail.FileName);
+                var fileName = $"{courseId}{ext}";
+
+                var uploadPath = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    "CourseImages"
+                );
+
+                if (!Directory.Exists(uploadPath))
+                    Directory.CreateDirectory(uploadPath);
+
+                var filePath = Path.Combine(uploadPath, fileName);
+
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await requestDto.UpdateThumbNail.CopyToAsync(stream);
+
+                course.ThumbNail = fileName;
+            }
 
             await _context.SaveChangesAsync();
 
@@ -469,24 +491,45 @@ namespace Bin_Edu.Controllers
         [HttpDelete("admin/dashboard/course-management/delete-course/{course_id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> DeleteCourseAdminApi(
-            [FromRoute(Name = "course_id")] int courseId
-        )
+    [FromRoute(Name = "course_id")] int courseId
+)
         {
+            var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == courseId);
 
-            Course course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == courseId);
+            if (course == null)
+            {
+                return NotFound(new ApiResponse<dynamic>
+                {
+                    Message = "Course not found"
+                });
+            }
+
+            // DELETE THUMBNAIL IMAGE (IF EXISTS)
+            if (!string.IsNullOrWhiteSpace(course.ThumbNail))
+            {
+                var imagePath = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    "CourseImages",
+                    course.ThumbNail
+                );
+
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+            }
 
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
 
-
-            return Json(
-                new ApiResponse<dynamic>
-                {
-                    Message = "Delete course successfully",
-                    Data = "admin/dashboard/course-management"
-                }
-            );
+            return Json(new ApiResponse<dynamic>
+            {
+                Message = "Delete course successfully",
+                Data = "admin/dashboard/course-management"
+            });
         }
+
 
 
 

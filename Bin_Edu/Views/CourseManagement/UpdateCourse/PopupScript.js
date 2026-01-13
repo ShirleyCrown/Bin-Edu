@@ -36,6 +36,7 @@ async function initUpdateModal(id) {
     const teachingTeacherNameInput = document.getElementsByName("UpdateTeachingTeacherName")[0];
     const openingDateInput = document.getElementsByName("UpdateOpeningDate")[0];
     const endDateInput = document.getElementsByName("UpdateEndDate")[0];
+    const thumbnailPreview = document.getElementById("updateThumbnailPreview");
 
 
     try {
@@ -51,6 +52,11 @@ async function initUpdateModal(id) {
         teachingTeacherNameInput.value = responseData.teachingTeacherName;
         openingDateInput.value = responseData.openingDate;
         endDateInput.value = responseData.endDate;
+        if (responseData.thumbNail) {
+            thumbnailPreview.src = `/CourseImages/${responseData.thumbNail}`;
+        } else {
+            thumbnailPreview.src = `https://placehold.co/600x400?text=No+Image`;
+        }
 
         updateCourseId = responseData.id;        
 
@@ -64,6 +70,16 @@ async function initUpdateModal(id) {
         
     }
 
+}
+
+function previewUpdateThumbnail(input) {
+    const preview = document.getElementById("updateThumbnailPreview");
+
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => preview.src = e.target.result;
+        reader.readAsDataURL(input.files[0]);
+    }
 }
 
 

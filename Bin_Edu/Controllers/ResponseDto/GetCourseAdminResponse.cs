@@ -26,5 +26,8 @@ namespace Bin_Edu.Controllers.ResponseDto
         public DateOnly OpeningDate { get; set; }
 
         public DateOnly EndDate { get; set; }
+
+        public string ThumbNail { get; set; }
+
     }
 }
