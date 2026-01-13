@@ -19,6 +19,8 @@ namespace Bin_Edu.Controllers.ResponseDto
 
         public int WeekDuration { get; set; }
 
+        public string ThumbNail { get; set; }
+
         public List<CourseTimetableDetail> Timetables { get; set; }
     }
 }

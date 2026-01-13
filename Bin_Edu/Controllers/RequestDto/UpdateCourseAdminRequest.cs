@@ -20,5 +20,7 @@ namespace Bin_Edu.Controllers.RequestDto
         public string UpdateOpeningDate { get; set; }
 
         public string UpdateEndDate { get; set; }
+
+        public IFormFile? UpdateThumbNail { get; set; }
     }
 }

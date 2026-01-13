@@ -7,7 +7,7 @@ namespace Bin_Edu.Controllers.ResponseDto
 {
     public class GetMyCoursesResponse
     {
-        
+
         public List<MyCourses> MyCourses { get; set; }
 
         public int TotalPages { get; set; }
@@ -26,6 +26,8 @@ namespace Bin_Edu.Controllers.ResponseDto
         public string CourseSubject { get; set; }
 
         public int WeekDuration { get; set; }
+
+        public string ThumbNail { get; set; }
 
         public List<CourseTimetableDetail> Timetables { get; set; }
     }

@@ -66,7 +66,7 @@ async function fetchCourses(page = 0) {
 
         const data = response.data.data;
         const courses = data.courses;
-
+        console.log(courses);
         courseTableBody.innerHTML = "";
 
         courses.forEach(c => {
@@ -78,9 +78,11 @@ async function fetchCourses(page = 0) {
                     <td>${c.coursePrice}</td>
                     <td>${c.weekDuration}</td>
                     <td>${c.numberOfStudents}</td>
+                    <td>${c.revenue}</td>
                     <td>
                         <a class="btn btn-sm btn-light text-warning" title="View Course Sessions" onclick="initCourseSessionsModal(${c.id})"><i class="bi bi-calendar-check"></i></a>
                         <a class="btn btn-sm btn-light text-primary" title="View Course Timetable" onclick="initTimetablesModal(${c.id})"><i class="bi bi-calendar-range"></i></a>
+                        <a class="btn btn-sm btn-light text-primary" title="View Students" href="/admin/dashboard/course/${c.id}/student-management"><i class="bi bi-file-person"></i></a>
                         <a class="btn btn-sm btn-light text-primary" title="Create Timetable" onclick="initCreateTimetableModal(${c.id})"><i class="bi bi-calendar-plus"></i></a>
                         <a class="btn btn-sm btn-light text-primary" title="View Exercises" href="/admin/dashboard/exercise-management/${c.id}"><i class="bi bi-book"></i></a>
                         <a class="btn btn-sm btn-light" title="Update Course" onclick="initUpdateModal(${c.id})"><i class="bi bi-pencil"></i></a>

@@ -33,13 +33,13 @@ namespace Bin_Edu.Controllers
             _context = context;
             _emailService = emailService;
         }
-       
-       
+
+
 
         [HttpGet("")]
         public IActionResult GetHomePage()
         {
-            
+
             return View("~/Views/Home/WebPage.cshtml");
         }
 
@@ -89,10 +89,10 @@ namespace Bin_Edu.Controllers
 
         [HttpGet("get-courses")]
         public async Task<IActionResult> HandleGetCourseListApi(
-            [FromQuery(Name = "page")] int page 
+            [FromQuery(Name = "page")] int page
         )
         {
-            
+
             List<Course> query = await _context.Courses
                 .Select(c => new Course
                 {
@@ -104,7 +104,8 @@ namespace Bin_Edu.Controllers
                     CoursePrice = c.CoursePrice,
                     OpeningDate = c.OpeningDate,
                     EndDate = c.EndDate,
-                    CourseRegistrations = c.CourseRegistrations
+                    CourseRegistrations = c.CourseRegistrations,
+                    ThumbNail = c.ThumbNail
                 })
                 .Skip(page * 9)
                 .Take(9)
@@ -132,7 +133,8 @@ namespace Bin_Edu.Controllers
                     TeachingTeacherName = queryData.TeachingTeacherName,
                     CoursePrice = queryData.CoursePrice,
                     NumberOfStudents = queryData.CourseRegistrations.Count,
-                    WeekDuration = weeks
+                    WeekDuration = weeks,
+                    ThumbNail = queryData.ThumbNail
                 };
 
                 responseDto.Add(responseData);
@@ -140,14 +142,14 @@ namespace Bin_Edu.Controllers
 
             int totalPages = await _context.Courses.CountAsync();
 
-            totalPages = (int) Math.Ceiling((double) totalPages / 9);
+            totalPages = (int)Math.Ceiling((double)totalPages / 9);
 
             return Json(new ApiResponse<dynamic>
             {
                 Message = "Get List of courses successfully",
                 Data = new
                 {
-                    Courses = responseDto, 
+                    Courses = responseDto,
                     TotalPages = totalPages
                 }
             });
@@ -158,7 +160,7 @@ namespace Bin_Edu.Controllers
         [HttpGet("search-courses")]
         public async Task<IActionResult> HandleSearchCoursesApi(
             [FromQuery(Name = "page")] int page,
-            [FromQuery(Name = "search")] string search 
+            [FromQuery(Name = "search")] string search
         )
         {
 
@@ -212,18 +214,18 @@ namespace Bin_Edu.Controllers
                 .Where(c => c.CourseTitle.Contains(search))
                 .CountAsync();
 
-            totalPages = (int) Math.Ceiling((double) totalPages / 9);
+            totalPages = (int)Math.Ceiling((double)totalPages / 9);
 
             return Json(new ApiResponse<dynamic>
             {
                 Message = "Search List of courses successfully",
                 Data = new
                 {
-                    Courses = responseDto, 
+                    Courses = responseDto,
                     TotalPages = totalPages
                 }
             });
-            
+
         }
 
 
@@ -284,18 +286,18 @@ namespace Bin_Edu.Controllers
                 .Where(c => c.Subject.SubjectName.ToLower() == filter.ToLower())
                 .CountAsync();
 
-            totalPages = (int) Math.Ceiling((double) totalPages / 9);
+            totalPages = (int)Math.Ceiling((double)totalPages / 9);
 
             return Json(new ApiResponse<dynamic>
             {
                 Message = "Filter List of courses successfully",
                 Data = new
                 {
-                    Courses = responseDto, 
+                    Courses = responseDto,
                     TotalPages = totalPages
                 }
             });
-            
+
         }
 
 
@@ -306,7 +308,7 @@ namespace Bin_Edu.Controllers
         {
 
             ViewBag.CourseId = courseId;
-            
+
             return View("~/Views/CourseDetail/WebPage.cshtml");
         }
 
@@ -330,7 +332,8 @@ namespace Bin_Edu.Controllers
                     CourseRegistrations = c.CourseRegistrations,
                     CourseTimetables = c.CourseTimetables,
                     OpeningDate = c.OpeningDate,
-                    EndDate = c.EndDate
+                    EndDate = c.EndDate,
+                    ThumbNail = c.ThumbNail
                 })
                 .FirstOrDefaultAsync();
 
@@ -355,8 +358,9 @@ namespace Bin_Edu.Controllers
                 CoursePrice = query.CoursePrice,
                 NumberOfStudents = query.CourseRegistrations.Count,
                 WeekDuration = weeks,
+                ThumbNail = query.ThumbNail,
                 Timetables = query.CourseTimetables
-                    .GroupBy(ct => new {ct.DayOfWeek, ct.StartTime, ct.EndTime})
+                    .GroupBy(ct => new { ct.DayOfWeek, ct.StartTime, ct.EndTime })
                     .Select(g => new CourseTimetableDetail
                     {
                         DayOfWeek = g.Key.DayOfWeek,
@@ -369,8 +373,8 @@ namespace Bin_Edu.Controllers
 
             // Related courses
             List<Course> queryCourseDetails = await _context.Courses
-                .Where(c => 
-                    c.Id != courseId && 
+                .Where(c =>
+                    c.Id != courseId &&
                     c.Subject.SubjectName == query.Subject.SubjectName
                 )
                 .Select(c => new Course
@@ -425,18 +429,18 @@ namespace Bin_Edu.Controllers
 
 
             if (User.Identity.IsAuthenticated)
-            {                
+            {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 bool isCourseRegistered = await _context.CourseRegistrations
-                    .AnyAsync(cr => 
-                        cr.CourseId == courseId && 
+                    .AnyAsync(cr =>
+                        cr.CourseId == courseId &&
                         cr.StudentId == userId
                     );
 
                 ViewBag.IsCourseRegistered = isCourseRegistered;
             }
 
-            
+
             return Json(new ApiResponse<GetCourseDetailResponse>
             {
                 Message = "Get course detail successfully",
@@ -533,7 +537,7 @@ namespace Bin_Edu.Controllers
                 </body>
                 </html>
             ";
-            
+
             _emailService.SendEmailAsync(userEmail, "Register course successfully", htmlEmail);
 
 
@@ -557,7 +561,7 @@ namespace Bin_Edu.Controllers
                 NumberOfStudents = query.CourseRegistrations.Count,
                 WeekDuration = weeks,
                 Timetables = query.CourseTimetables
-                    .GroupBy(ct => new {ct.DayOfWeek, ct.StartTime, ct.EndTime})
+                    .GroupBy(ct => new { ct.DayOfWeek, ct.StartTime, ct.EndTime })
                     .Select(g => new CourseTimetableDetail
                     {
                         DayOfWeek = g.Key.DayOfWeek,
@@ -567,7 +571,7 @@ namespace Bin_Edu.Controllers
                     .ToList()
             };
 
-            
+
             return View("~/Views/RegisterCourse/WebPage.cshtml", courseDetail);
         }
 
@@ -575,13 +579,13 @@ namespace Bin_Edu.Controllers
         [HttpGet("my-courses")]
         public IActionResult GetMyCoursesPage()
         {
-            
+
             return View("~/Views/MyCourses/WebPage.cshtml");
         }
 
         [HttpGet("get-my-courses")]
         public async Task<IActionResult> HandleGetMyCourses(
-            [FromQuery(Name = "page")] int page 
+            [FromQuery(Name = "page")] int page
         )
         {
 
@@ -597,13 +601,14 @@ namespace Bin_Edu.Controllers
                     Subject = cr.Course.Subject,
                     CourseTimetables = cr.Course.CourseTimetables,
                     OpeningDate = cr.Course.OpeningDate,
-                    EndDate = cr.Course.EndDate
+                    EndDate = cr.Course.EndDate,
+                    ThumbNail = cr.Course.ThumbNail
                 })
                 .Skip(page * 9)
                 .Take(9)
                 .ToListAsync();
 
-            
+
             List<MyCourses> myCourses = new List<MyCourses>();
 
             foreach (var queryData in query)
@@ -616,7 +621,7 @@ namespace Bin_Edu.Controllers
 
                 // Full weeks
                 int weeks = diff.Days / 7;
-                
+
                 MyCourses myCourse = new MyCourses
                 {
                     Id = queryData.Id,
@@ -624,7 +629,7 @@ namespace Bin_Edu.Controllers
                     CourseSubject = queryData.Subject.SubjectName,
                     TeachingTeacherName = queryData.TeachingTeacherName,
                     Timetables = queryData.CourseTimetables
-                        .GroupBy(ct => new {ct.DayOfWeek, ct.StartTime, ct.EndTime})
+                        .GroupBy(ct => new { ct.DayOfWeek, ct.StartTime, ct.EndTime })
                         .Select(g => new CourseTimetableDetail
                         {
                             DayOfWeek = g.Key.DayOfWeek,
@@ -632,7 +637,8 @@ namespace Bin_Edu.Controllers
                             EndTime = g.Key.EndTime
                         })
                         .ToList(),
-                    WeekDuration = weeks
+                    WeekDuration = weeks,
+                    ThumbNail = queryData.ThumbNail
                 };
 
                 myCourses.Add(myCourse);
@@ -642,8 +648,8 @@ namespace Bin_Edu.Controllers
                 .Where(cr => cr.StudentId == userId)
                 .CountAsync();
 
-            totalPages = (int) Math.Ceiling((double) totalPages / 9);
-            
+            totalPages = (int)Math.Ceiling((double)totalPages / 9);
+
 
             return Json(new ApiResponse<GetMyCoursesResponse>
             {
@@ -664,7 +670,7 @@ namespace Bin_Edu.Controllers
         {
 
             ViewBag.CourseId = courseId;
-            
+
             return View("~/Views/MyCourseDetail/WebPage.cshtml");
         }
 
@@ -689,7 +695,8 @@ namespace Bin_Edu.Controllers
                     CourseRegistrations = c.CourseRegistrations,
                     CourseTimetables = c.CourseTimetables,
                     OpeningDate = c.OpeningDate,
-                    EndDate = c.EndDate
+                    EndDate = c.EndDate,
+                    ThumbNail = c.ThumbNail
                 })
                 .FirstOrDefaultAsync();
 
@@ -713,17 +720,18 @@ namespace Bin_Edu.Controllers
                 TeachingTeacherName = query.TeachingTeacherName,
                 WeekDuration = weeks,
                 Timetables = query.CourseTimetables
-                    .GroupBy(ct => new {ct.DayOfWeek, ct.StartTime, ct.EndTime})
+                    .GroupBy(ct => new { ct.DayOfWeek, ct.StartTime, ct.EndTime })
                     .Select(g => new CourseTimetableDetail
                     {
                         DayOfWeek = g.Key.DayOfWeek,
                         StartTime = g.Key.StartTime,
                         EndTime = g.Key.EndTime
                     })
-                    .ToList()
+                    .ToList(),
+                ThumbNail = query.ThumbNail
             };
 
-            
+
             return Json(new ApiResponse<GetMyCourseDetailResponse>
             {
                 Message = "Get my course detail successfully",
@@ -741,7 +749,7 @@ namespace Bin_Edu.Controllers
         {
 
             ViewBag.CourseId = courseId;
-            
+
             return View("~/Views/CourseTimetable/WebPage.cshtml");
         }
 
@@ -755,7 +763,7 @@ namespace Bin_Edu.Controllers
             DateOnly parsedSelectedDate = DateOnly.Parse(selectedDate);
 
             GetMyCourseTimetableResponse? responseDto = await _context.Courses
-                .Where(c => 
+                .Where(c =>
                     c.Id == courseId
                 )
                 .Select(c => new GetMyCourseTimetableResponse
@@ -790,7 +798,7 @@ namespace Bin_Edu.Controllers
         {
 
             ViewBag.CourseId = courseId;
-            
+
             return View("~/Views/MyCourseExercises/WebPage.cshtml");
         }
 

@@ -18,14 +18,8 @@ async function fetchMyCourseDetail() {
         
         const courseDetail = response.data.data;
 
-        courseThumbnail.style.backgroundImage = 
-            courseDetail.courseSubject == "Math" ? 
-            "url('https://www.shutterstock.com/shutterstock/photos/1859813464/display_1500/stock-vector-math-horizontal-banner-presentation-website-isolated-lettering-typography-idea-with-icons-1859813464.jpg')" 
-            : 
-            courseDetail.courseSubject == "Literature" ? 
-            "url('https://www.shutterstock.com/image-photo/image-latin-american-continent-on-260nw-2640131997.jpg')" 
-            : 
-            "url('https://www.shutterstock.com/image-vector/english-language-learning-concept-vector-260nw-1827529367.jpg')";
+        console.log(courseDetail);
+        courseThumbnail.style.backgroundImage = `url('${getCourseImage(courseDetail.thumbNail)}')`;
         courseTitle.innerText = courseDetail.courseTitle;
         courseDescription.innerText = courseDetail.courseDescription;
         courseSubject.innerText = courseDetail.courseSubject;
@@ -42,6 +36,13 @@ async function fetchMyCourseDetail() {
         console.log(ex);
     }
 
+}
+
+function getCourseImage(thumbnail) {
+    if (!thumbnail) {
+        return "https://placehold.co/600x400?text=No+Image+Available";
+    }
+    return `/CourseImages/${thumbnail}`;
 }
 
 async function registerCourse() {

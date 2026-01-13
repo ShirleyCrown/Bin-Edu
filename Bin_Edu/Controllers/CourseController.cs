@@ -145,13 +145,15 @@ namespace Bin_Edu.Controllers
                 {
                     Id = c.Id,
                     CourseTitle = c.CourseTitle,
-                     CourseSubjectId = c.SubjectId,
+                    CourseSubjectId = c.SubjectId,
                     CourseSubject = c.Subject.SubjectName,
                     TeachingTeacherName = c.TeachingTeacherName,
                     CoursePrice = c.CoursePrice,
                     NumberOfStudents = c.CourseRegistrations.Count,
                     WeekDuration = (c.EndDate.ToDateTime(TimeOnly.MinValue)
-                                    - c.OpeningDate.ToDateTime(TimeOnly.MinValue)).Days / 7
+                                    - c.OpeningDate.ToDateTime(TimeOnly.MinValue)).Days / 7,
+                    Revenue = c.CourseRegistrations.Sum(cr => (int?)cr.Course.CoursePrice) ?? 0
+
                 })
                 .ToListAsync();
 
@@ -198,6 +200,7 @@ namespace Bin_Edu.Controllers
                     Message = "Course description is required."
                 });
 
+            // Console.WriteLine("SubjectId: " + requestDto.SubjectId);
             if (requestDto.SubjectId == null)
                 return BadRequest(new ApiResponse<dynamic>
                 {
@@ -278,6 +281,31 @@ namespace Bin_Edu.Controllers
             _context.Courses.Add(course);
             await _context.SaveChangesAsync();
 
+            if (requestDto.ThumbNail != null && requestDto.ThumbNail.Length > 0)
+            {
+                string uploadsFolder = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    "CourseImages"
+                );
+
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                string extension = Path.GetExtension(requestDto.ThumbNail.FileName);
+                string fileName = $"{course.Id}{extension}";
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await requestDto.ThumbNail.CopyToAsync(stream);
+                }
+
+                // save filename to DB
+                course.ThumbNail = fileName;
+                await _context.SaveChangesAsync();
+            }
+
             return Json(new ApiResponse<dynamic>
             {
                 Data = "admin/dashboard/course-management",
@@ -306,7 +334,8 @@ namespace Bin_Edu.Controllers
                     CoursePrice = c.CoursePrice,
                     NumberOfStudents = c.CourseRegistrations.Count,
                     OpeningDate = c.OpeningDate,
-                    EndDate = c.EndDate
+                    EndDate = c.EndDate,
+                    ThumbNail = c.ThumbNail,
                 })
                 .FirstOrDefaultAsync(c => c.Id == courseId);
 
@@ -428,6 +457,27 @@ namespace Bin_Edu.Controllers
             course.OpeningDate = openingDate;
             course.EndDate = endDate;
 
+            if (requestDto.UpdateThumbNail != null && requestDto.UpdateThumbNail.Length > 0)
+            {
+                var ext = Path.GetExtension(requestDto.UpdateThumbNail.FileName);
+                var fileName = $"{courseId}{ext}";
+
+                var uploadPath = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    "CourseImages"
+                );
+
+                if (!Directory.Exists(uploadPath))
+                    Directory.CreateDirectory(uploadPath);
+
+                var filePath = Path.Combine(uploadPath, fileName);
+
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await requestDto.UpdateThumbNail.CopyToAsync(stream);
+
+                course.ThumbNail = fileName;
+            }
 
             await _context.SaveChangesAsync();
 
@@ -446,21 +496,42 @@ namespace Bin_Edu.Controllers
             [FromRoute(Name = "course_id")] int courseId
         )
         {
+            var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == courseId);
 
-            Course course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == courseId);
+            if (course == null)
+            {
+                return NotFound(new ApiResponse<dynamic>
+                {
+                    Message = "Course not found"
+                });
+            }
+
+            // DELETE THUMBNAIL IMAGE (IF EXISTS)
+            if (!string.IsNullOrWhiteSpace(course.ThumbNail))
+            {
+                var imagePath = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    "CourseImages",
+                    course.ThumbNail
+                );
+
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+            }
 
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
 
-
-            return Json(
-                new ApiResponse<dynamic>
-                {
-                    Message = "Delete course successfully",
-                    Data = "admin/dashboard/course-management"
-                }
-            );
+            return Json(new ApiResponse<dynamic>
+            {
+                Message = "Delete course successfully",
+                Data = "admin/dashboard/course-management"
+            });
         }
+
 
 
 
@@ -695,12 +766,12 @@ namespace Bin_Edu.Controllers
         }
 
 
-         [HttpPost("admin/dashboard/course-management/course-sessions/{course_timetable_id}/mark-absent/{student_id}")]
+        [HttpPost("admin/dashboard/course-management/course-sessions/{course_timetable_id}/mark-absent/{student_id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> MarkStudentAbsent(
-            [FromRoute(Name = "course_timetable_id")] int courseTimetableId,
-            [FromRoute(Name = "student_id")] string studentId
-        )
+           [FromRoute(Name = "course_timetable_id")] int courseTimetableId,
+           [FromRoute(Name = "student_id")] string studentId
+       )
         {
             CourseAttendance? attendance = await _context.CourseAttendances
                 .Include(ca => ca.CourseRegistration)
@@ -736,6 +807,76 @@ namespace Bin_Edu.Controllers
             {
                 Message = "Marked student as absent successfully",
                 Data = null
+            });
+        }
+
+        [HttpGet("admin/dashboard/course/{courseId}/student-management")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> CourseStudentManagement(int courseId)
+        {
+            var course = await _context.Courses
+                .Where(c => c.Id == courseId)
+                .Select(c => new
+                {
+                    c.Id,
+                    c.CourseTitle
+                })
+                .FirstOrDefaultAsync();
+
+            if (course == null) return NotFound();
+
+            ViewBag.CourseId = course.Id;
+            ViewBag.CourseTitle = course.CourseTitle;
+
+            return View("~/Views/CourseManagement/GetStudents/WebPage.cshtml");
+        }
+
+        [HttpGet("admin/dashboard/course-management/{courseId}/students")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetStudentsByCourse(
+    int courseId,
+    [FromQuery] int page,
+    [FromQuery] string? keyword
+)
+        {
+            const int pageSize = 10;
+
+            var query = _context.CourseRegistrations
+                .Where(cr => cr.CourseId == courseId)
+                .Select(cr => cr.Student)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                query = query.Where(s => s.FullName.Contains(keyword));
+            }
+
+            int totalItems = query.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var students = query
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .Select(s => new GetStudentsAdminResponse
+                {
+                    Id = s.Id,
+                    FullName = s.FullName,
+                    Email = s.Email,
+                    Dob = s.Dob,
+                    PhoneNumber = s.PhoneNumber,
+                    Grade = s.Grade,
+                    School = s.School
+                })
+                .ToList();
+
+            return Json(new ApiResponse<object>
+            {
+                Message = "Get students by course successfully",
+                Data = new
+                {
+                    Students = students,
+                    TotalPages = totalPages
+                }
             });
         }
 
