@@ -1,4 +1,5 @@
-<div class="modal fade" id="updateCourseModal" tabindex="-1" aria-labelledby="updateCourseModalLabel" aria-hidden="true">
+<div class="modal fade" id="updateCourseModal" tabindex="-1" aria-labelledby="updateCourseModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,11 +8,11 @@
             </div>
             <div class="modal-body">
 
-                 <!-- ERROR ALERT -->
+                <!-- ERROR ALERT -->
                 <div class="d-none alert update-alert-danger alert-danger d-flex align-items-center" role="alert">
                     <span class="material-symbols-outlined me-2">error</span>
                     <div id="updateCourseErrorMessage">
-                        
+
                     </div>
                 </div>
 
@@ -24,12 +25,14 @@
 
                     <div class="mb-3">
                         <label for="CourseDescription" class="col-form-label">Description:</label>
-                        <textarea type="text" class="form-control" id="CourseDescription" name="UpdateCourseDescription"></textarea>
+                        <textarea type="text" class="form-control" id="CourseDescription"
+                            name="UpdateCourseDescription"></textarea>
                     </div>
 
                     <div class="mb-3">
                         <label for="CourseSubject" class="col-form-label">Subject:</label>
-                        <select class="form-select" id="CourseSubject" name="UpdateCourseSubject" aria-label="Course subject select">
+                        <select class="form-select" id="CourseSubject" name="UpdateCourseSubject"
+                            aria-label="Course subject select">
                             <option value="" selected>Select subject</option>
                         </select>
                     </div>
@@ -41,7 +44,8 @@
 
                     <div class="mb-3">
                         <label for="TeachingTeacherName" class="col-form-label">Teacher Name:</label>
-                        <input type="text" class="form-control" id="TeachingTeacherName" name="UpdateTeachingTeacherName">
+                        <input type="text" class="form-control" id="TeachingTeacherName"
+                            name="UpdateTeachingTeacherName">
                     </div>
 
                     <div class="mb-3">
@@ -52,6 +56,28 @@
                     <div class="mb-3">
                         <label for="EndDate" class="col-form-label">End Date:</label>
                         <input type="date" class="form-control" id="EndDate" name="UpdateEndDate">
+                    </div>
+
+                    @* <div class="mb-3">
+                        <label class="col-form-label">Thumbnail</label>
+
+                        <img id="updateThumbnailPreview" src="https://placehold.co/600x400?text=No+Image"
+                            class="img-fluid rounded mb-2" style="max-height:200px; object-fit:cover;" />
+
+                        <input type="file" class="form-control" name="UpdateThumbNail" accept="image/*"
+                            onchange="previewUpdateThumbnail(this)">
+                    </div> *@
+
+                    <div class="mb-3">
+                        <label for="UpdateThumbNail" class="col-form-label">Course Thumbnail:</label>
+                        <input type="file" class="form-control" id="UpdateThumbNail" name="UpdateThumbNail"
+                            accept="image/*" onchange="previewUpdateThumbnail(this)">
+                    </div>
+
+                    <!-- PREVIEW -->
+                    <div class="mb-3 text-center">
+                        <img id="updateThumbnailPreview" src="https://placehold.co/600x400?text=No+Image"
+                            class="img-fluid rounded shadow-sm" style="max-height: 200px;">
                     </div>
                 </form>
             </div>
