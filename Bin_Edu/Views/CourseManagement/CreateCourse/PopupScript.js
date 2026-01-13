@@ -2,7 +2,7 @@
 
 async function fetchSubjects() {
 
-    const courseSubjectSelect = document.getElementById("CourseSubject");
+    const courseSubjectSelect = document.getElementById("SubjectId");
 
     try {
 
@@ -37,7 +37,7 @@ async function createCourse() {
 
         const formData = new FormData(createCourseForm);
 
-        
+        console.log(...formData);
         const response = await axios.post(`/admin/dashboard/course-management/create-course`, formData)
         
 
@@ -63,6 +63,17 @@ async function createCourse() {
     }
 }
 
+function previewThumbnail(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById("thumbnailPreview");
+
+    if (!file) {
+        preview.src = "https://placehold.co/600x400?text=No+Image";
+        return;
+    }
+
+    preview.src = URL.createObjectURL(file);
+}
 
 
 // CALL FUNCTIONS

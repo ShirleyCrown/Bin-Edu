@@ -13,6 +13,15 @@ function initRelatedCourseSection() {
     }).mount();
 }
 
+
+function getCourseImage(thumbnail) {
+    if (!thumbnail) {
+        return "https://placehold.co/600x400?text=No+Image+Available";
+    }
+    return `/CourseImages/${thumbnail}`;
+}
+
+
 async function fetchCourseDetail() {
 
     const courseId = document.getElementsByName("CourseId")[0];
@@ -34,14 +43,8 @@ async function fetchCourseDetail() {
         const courseDetail = response.data.data.courseDetail;
         const relatedCourses =  response.data.data.relatedCourses;
 
-        courseThumbnail.style.backgroundImage = 
-            courseDetail.courseSubject == "Math" ? 
-            "url('https://www.shutterstock.com/shutterstock/photos/1859813464/display_1500/stock-vector-math-horizontal-banner-presentation-website-isolated-lettering-typography-idea-with-icons-1859813464.jpg')" 
-            : 
-            courseDetail.courseSubject == "Literature" ? 
-            "url('https://www.shutterstock.com/image-photo/image-latin-american-continent-on-260nw-2640131997.jpg')" 
-            : 
-            "url('https://www.shutterstock.com/image-vector/english-language-learning-concept-vector-260nw-1827529367.jpg')";
+        courseThumbnail.style.backgroundImage = `url('${getCourseImage(courseDetail.thumbNail)}')`;
+
         courseTitle.innerText = courseDetail.courseTitle;
         courseDescription.innerText = courseDetail.courseDescription;
         coursePrice.innerText = `${courseDetail.coursePrice} VND`;

@@ -11,7 +11,7 @@ namespace Bin_Edu.Controllers.ResponseDto
         public CourseDetail CourseDetail { get; set; }
 
         public List<RelatedCourse> RelatedCourses { get; set; }
-        
+
     }
 
 
@@ -32,6 +32,8 @@ namespace Bin_Edu.Controllers.ResponseDto
         public long CoursePrice { get; set; }
 
         public int WeekDuration { get; set; }
+
+        public string ThumbNail { get; set; }
 
         public List<CourseTimetableDetail> Timetables { get; set; }
     }

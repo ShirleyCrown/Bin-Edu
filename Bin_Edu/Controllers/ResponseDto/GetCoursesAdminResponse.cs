@@ -22,5 +22,8 @@ namespace Bin_Edu.Controllers.ResponseDto
         public long CoursePrice { get; set; }
 
         public int WeekDuration { get; set; }
+
+        public int Revenue { get; set; }
+
     }
 }
