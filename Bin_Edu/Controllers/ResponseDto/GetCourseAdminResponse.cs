@@ -29,5 +29,6 @@ namespace Bin_Edu.Controllers.ResponseDto
 
         public string ThumbNail { get; set; }
 
+
     }
 }

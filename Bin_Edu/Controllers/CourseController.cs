@@ -151,7 +151,9 @@ namespace Bin_Edu.Controllers
                     CoursePrice = c.CoursePrice,
                     NumberOfStudents = c.CourseRegistrations.Count,
                     WeekDuration = (c.EndDate.ToDateTime(TimeOnly.MinValue)
-                                    - c.OpeningDate.ToDateTime(TimeOnly.MinValue)).Days / 7
+                                    - c.OpeningDate.ToDateTime(TimeOnly.MinValue)).Days / 7,
+                    Revenue = c.CourseRegistrations.Sum(cr => (int?)cr.Course.CoursePrice) ?? 0
+
                 })
                 .ToListAsync();
 
@@ -333,7 +335,7 @@ namespace Bin_Edu.Controllers
                     NumberOfStudents = c.CourseRegistrations.Count,
                     OpeningDate = c.OpeningDate,
                     EndDate = c.EndDate,
-                    ThumbNail = c.ThumbNail
+                    ThumbNail = c.ThumbNail,
                 })
                 .FirstOrDefaultAsync(c => c.Id == courseId);
 
@@ -491,8 +493,8 @@ namespace Bin_Edu.Controllers
         [HttpDelete("admin/dashboard/course-management/delete-course/{course_id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> DeleteCourseAdminApi(
-    [FromRoute(Name = "course_id")] int courseId
-)
+            [FromRoute(Name = "course_id")] int courseId
+        )
         {
             var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == courseId);
 
@@ -805,6 +807,76 @@ namespace Bin_Edu.Controllers
             {
                 Message = "Marked student as absent successfully",
                 Data = null
+            });
+        }
+
+        [HttpGet("admin/dashboard/course/{courseId}/student-management")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> CourseStudentManagement(int courseId)
+        {
+            var course = await _context.Courses
+                .Where(c => c.Id == courseId)
+                .Select(c => new
+                {
+                    c.Id,
+                    c.CourseTitle
+                })
+                .FirstOrDefaultAsync();
+
+            if (course == null) return NotFound();
+
+            ViewBag.CourseId = course.Id;
+            ViewBag.CourseTitle = course.CourseTitle;
+
+            return View("~/Views/CourseManagement/GetStudents/WebPage.cshtml");
+        }
+
+        [HttpGet("admin/dashboard/course-management/{courseId}/students")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetStudentsByCourse(
+    int courseId,
+    [FromQuery] int page,
+    [FromQuery] string? keyword
+)
+        {
+            const int pageSize = 10;
+
+            var query = _context.CourseRegistrations
+                .Where(cr => cr.CourseId == courseId)
+                .Select(cr => cr.Student)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                query = query.Where(s => s.FullName.Contains(keyword));
+            }
+
+            int totalItems = query.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var students = query
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .Select(s => new GetStudentsAdminResponse
+                {
+                    Id = s.Id,
+                    FullName = s.FullName,
+                    Email = s.Email,
+                    Dob = s.Dob,
+                    PhoneNumber = s.PhoneNumber,
+                    Grade = s.Grade,
+                    School = s.School
+                })
+                .ToList();
+
+            return Json(new ApiResponse<object>
+            {
+                Message = "Get students by course successfully",
+                Data = new
+                {
+                    Students = students,
+                    TotalPages = totalPages
+                }
             });
         }
 

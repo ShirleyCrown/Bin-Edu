@@ -19,9 +19,7 @@ async function fetchMyCourseDetail() {
         const courseDetail = response.data.data;
 
         console.log(courseDetail);
-        courseThumbnail.style.backgroundImage = courseDetail.thumbNail
-                ? `CourseImages/${courseDetail.thumbNail}`
-                : `https://placehold.co/600x400?text=No+Image+Available`;
+        courseThumbnail.style.backgroundImage = `url('${getCourseImage(courseDetail.thumbNail)}')`;
         courseTitle.innerText = courseDetail.courseTitle;
         courseDescription.innerText = courseDetail.courseDescription;
         courseSubject.innerText = courseDetail.courseSubject;
@@ -38,6 +36,13 @@ async function fetchMyCourseDetail() {
         console.log(ex);
     }
 
+}
+
+function getCourseImage(thumbnail) {
+    if (!thumbnail) {
+        return "https://placehold.co/600x400?text=No+Image+Available";
+    }
+    return `/CourseImages/${thumbnail}`;
 }
 
 async function registerCourse() {
