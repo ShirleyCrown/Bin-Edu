@@ -145,7 +145,7 @@ namespace Bin_Edu.Controllers
                 {
                     Id = c.Id,
                     CourseTitle = c.CourseTitle,
-                     CourseSubjectId = c.SubjectId,
+                    CourseSubjectId = c.SubjectId,
                     CourseSubject = c.Subject.SubjectName,
                     TeachingTeacherName = c.TeachingTeacherName,
                     CoursePrice = c.CoursePrice,
@@ -198,6 +198,7 @@ namespace Bin_Edu.Controllers
                     Message = "Course description is required."
                 });
 
+            // Console.WriteLine("SubjectId: " + requestDto.SubjectId);
             if (requestDto.SubjectId == null)
                 return BadRequest(new ApiResponse<dynamic>
                 {
@@ -277,6 +278,31 @@ namespace Bin_Edu.Controllers
 
             _context.Courses.Add(course);
             await _context.SaveChangesAsync();
+
+            if (requestDto.ThumbNail != null && requestDto.ThumbNail.Length > 0)
+            {
+                string uploadsFolder = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    "CourseImages"
+                );
+
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                string extension = Path.GetExtension(requestDto.ThumbNail.FileName);
+                string fileName = $"{course.Id}{extension}";
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await requestDto.ThumbNail.CopyToAsync(stream);
+                }
+
+                // save filename to DB
+                course.ThumbNail = fileName;
+                await _context.SaveChangesAsync();
+            }
 
             return Json(new ApiResponse<dynamic>
             {
@@ -695,12 +721,12 @@ namespace Bin_Edu.Controllers
         }
 
 
-         [HttpPost("admin/dashboard/course-management/course-sessions/{course_timetable_id}/mark-absent/{student_id}")]
+        [HttpPost("admin/dashboard/course-management/course-sessions/{course_timetable_id}/mark-absent/{student_id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> MarkStudentAbsent(
-            [FromRoute(Name = "course_timetable_id")] int courseTimetableId,
-            [FromRoute(Name = "student_id")] string studentId
-        )
+           [FromRoute(Name = "course_timetable_id")] int courseTimetableId,
+           [FromRoute(Name = "student_id")] string studentId
+       )
         {
             CourseAttendance? attendance = await _context.CourseAttendances
                 .Include(ca => ca.CourseRegistration)
