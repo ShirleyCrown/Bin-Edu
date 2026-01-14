@@ -1,0 +1,31 @@
+<div class="modal fade" id="updateSubjectModal" tabindex="-1" aria-labelledby="updateSubjectModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="updateSubjectModalLabel">Update subject</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <!-- ERROR ALERT -->
+                <div class="d-none alert update-subject-alert alert-danger d-flex align-items-center" role="alert">
+                    <span class="material-symbols-outlined me-2">error</span>
+                    <div id="updateSubjectErrorMessage"></div>
+                </div>
+
+                <!-- FORM -->
+                <form id="updateSubjectForm">
+                    <div class="mb-3">
+                        <label for="SubjectName" class="col-form-label">Subject Name:</label>
+                        <input type="text" class="form-control" id="SubjectName" name="UpdateSubjectName">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="updateSubject()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
