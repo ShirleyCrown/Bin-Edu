@@ -1,0 +1,64 @@
+@{
+    Layout = "~/Views/Layouts/StudentLayout/LAyoutPage.cshtml";
+}
+
+
+<!-- SEARCH + FILTER -->
+<div class="container mb-4">
+    <div class="row g-3 align-items-center">
+        <div class="col-md-6">
+            <input 
+                type="text" 
+                class="form-control" 
+                placeholder="Search for a course by name..."
+                oninput="searchCourses(event.target.value)">
+        </div>
+        <div class="col-md-6 text-md-end">
+            <button 
+                class="btn btn-outline-secondary me-2" 
+                onclick="filterCourses('ALL')"
+            >
+                All
+            </button>
+            <button 
+                class="btn btn-outline-secondary me-2" 
+                onclick="filterCourses('MATH')"
+            >
+                Math
+            </button>
+            <button 
+                class="btn btn-outline-secondary me-2"
+                onclick="filterCourses('ENGLISH')"
+            >
+                English
+            </button>
+            <button 
+                class="btn btn-outline-secondary"
+                onclick="filterCourses('LITERATURE')"
+            >
+                Literature
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- COURSE GRID -->
+<div class="container">
+    <div id="courseGrid" class="row g-4">
+
+
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="card-footer mt-5 d-flex justify-content-center">
+        <nav>
+            <ul class="pagination mb-0" id="pagination">
+            
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+
+<script src="/static/Home/WebScript.js"></script>

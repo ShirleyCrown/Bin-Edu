@@ -1,0 +1,58 @@
+<div class="modal fade" id="createStudentModal" tabindex="-1" aria-labelledby="createStudentModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createStudentModalLabel">Create new student</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <!-- ERROR ALERT -->
+                <div class="d-none alert alert-danger d-flex align-items-center" role="alert">
+                    <span class="material-symbols-outlined me-2">error</span>
+                    <div id="createStudentErrorMessage">
+
+                    </div>
+                </div>
+
+                <!-- FORM -->
+                <form id="createStudentForm">
+                    <div class="mb-3">
+                        <label for="StudentFullName" class="col-form-label">Full Name:</label>
+                        <input type="text" class="form-control" id="StudentFullName" name="FullName">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="StudentEmail" class="col-form-label">Email:</label>
+                        <input type="email" class="form-control" id="StudentEmail" name="Email">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="StudentDob" class="col-form-label">Date of Birth:</label>
+                        <input type="date" class="form-control" id="StudentDob" name="Dob">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="StudentPhoneNumber" class="col-form-label">Phone Number:</label>
+                        <input type="text" class="form-control" id="StudentPhoneNumber" name="PhoneNumber">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="StudentGrade" class="col-form-label">Grade:</label>
+                        <input type="text" class="form-control" id="StudentGrade" name="Grade">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="StudentSchool" class="col-form-label">School:</label>
+                        <input type="text" class="form-control" id="StudentSchool" name="School">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createStudent()">Create</button>
+            </div>
+        </div>
+    </div>
+</div>

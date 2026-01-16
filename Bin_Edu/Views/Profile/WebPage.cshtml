@@ -1,0 +1,79 @@
+@model Bin_Edu.Controllers.ResponseDto.GetProfileResponse;
+
+@{
+    Layout = "~/Views/Layouts/StudentLayout/LAyoutPage.cshtml";
+}
+
+
+<!-- Main Content -->
+<main class="container py-5">
+
+    <!-- Page Header -->
+    <div class="mb-4 border-bottom pb-3">
+        <h1 class="fw-bold display-6">My Profile</h1>
+        <p class="text-muted">Manage your personal and academic information</p>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="row justify-content-center">
+
+        <!-- Personal + Academic Info -->
+        <div class="col-lg-8">
+
+            <!-- Personal Details -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header fw-bold d-flex align-items-center gap-2">
+                    <i class="bi bi-person-fill text-primary"></i>
+                    Personal Details
+                </div>
+                <div class="card-body row g-4">
+                    <div class="col-md-6">
+                        <small class="text-uppercase text-muted">Full Name</small>
+                        <p class="fw-medium mb-0">@Model.FullName</p>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="text-uppercase text-muted">Date of Birth</small>
+                        <p class="fw-medium mb-0">@Model.Dob</p>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="text-uppercase text-muted">Email Address</small>
+                        <p class="fw-medium mb-0">@Model.Email</p>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="text-uppercase text-muted">Phone Number</small>
+                        <p class="fw-medium mb-0">@Model.PhoneNumber</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Academic Information -->
+            <div class="card shadow-sm">
+                <div class="card-header fw-bold d-flex align-items-center gap-2">
+                    <i class="bi bi-mortarboard text-primary"></i>
+                    Academic Information
+                </div>
+                <div class="card-body row g-4">
+                    <div class="col-md-6">
+                        <small class="text-uppercase text-muted">Current Grade</small><br />
+                        <span class="badge bg-primary-subtle text-primary fw-medium">
+                            @Model.Grade Grade
+                        </span>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="text-uppercase text-muted">School Name</small>
+                        <p class="fw-medium mb-0">@Model.School</p>
+                    </div>
+                    <div class="col-12">
+                        <small class="text-uppercase text-muted">Student ID</small>
+                        <p class="fw-medium font-monospace mb-0">@Model.Id</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+
+
+@* <script src="/static/Home/WebScript.js"></script> *@

@@ -1,0 +1,60 @@
+@{
+    Layout = "~/Views/Layouts/AdminLayout/LayoutPage.cshtml";
+    ViewData["Title"] = "Exercise Management";
+}
+
+
+
+<h2 class="mb-4">Exercise Management</h2>
+
+<!-- TABLE -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <input class="form-control w-25" placeholder="Search exercises...">
+
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createExerciseModal">
+            <i class="bi bi-plus-square"></i> Create Exercise
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Exercise Name</th>
+                    <th>Description</th>
+                    <th>Submit Deadline</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="exerciseTableBody">
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="card-footer d-flex justify-content-center">
+        <nav>
+            <ul class="pagination mb-0" id="pagination">
+
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+
+
+@await Html.PartialAsync("~/Views/ExerciseManagement/CreateExercise/PopupModal.cshtml")
+@await Html.PartialAsync("~/Views/ExerciseManagement/UpdateExercise/PopupModal.cshtml")
+@await Html.PartialAsync("~/Views/ExerciseManagement/DeleteExercise/PopupModal.cshtml")
+
+
+
+<script src="/static/ExerciseManagement/GetExercises/WebScript.js"></script>
+<script src="/static/ExerciseManagement/DeleteExercise/PopupScript.js"></script>
+<script src="/static/ExerciseManagement/UpdateExercise/PopupScript.js"></script>
+<script src="/static/ExerciseManagement/CreateExercise/PopupScript.js"></script>

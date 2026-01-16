@@ -1,0 +1,146 @@
+@using Bin_Edu.Controllers.ResponseDto
+@using System.Security.Claims
+@model CourseDetail
+@{
+    Layout = "~/Views/Layouts/StudentLayout/LayoutPage.cshtml";
+
+    string? fullName = User.Claims
+    .FirstOrDefault(c => c.Type == "FullName")?.Value;
+    string? email = User.FindFirstValue(ClaimTypes.Email);
+    string dayOfWeek = "";
+    string time = "";
+
+    foreach (var timetable in Model.Timetables)
+    {
+        dayOfWeek += timetable.DayOfWeek + " ";
+    }
+
+    dayOfWeek = dayOfWeek.Trim().Replace(" ", "/");
+    time = $"{Model.Timetables[0].StartTime.ToShortTimeString()} - {Model.Timetables[0].EndTime.ToShortTimeString()}";
+
+}
+
+
+<!-- MAIN LAYOUT -->
+<div class="container py-5">
+
+
+    <!-- Card -->
+    <div class="card shadow-sm mt-4">
+
+        <!-- Success Hero -->
+        <div class="card-body text-center py-5">
+            <div class="rounded-circle bg-success-subtle p-3 d-inline-block mb-3">
+                <span class="material-symbols-outlined text-success" style="font-size:64px">check_circle</span>
+            </div>
+
+            <h1 class="fw-bold fs-2 mb-2">Registration Confirmed!</h1>
+
+            <p class="text-muted mx-auto" style="max-width: 500px;">
+                You have successfully enrolled in the course below.
+                A confirmation email has been sent to your registered address.
+            </p>
+        </div>
+
+        <!-- Course Card -->
+        <div class="px-4 pb-4">
+
+            <div class="row g-3 border rounded p-3 bg-light">
+
+                <!-- Image -->
+                <div class="col-md-4">
+                    @if (Model.ThumbNail != null && Model.ThumbNail != "")
+                    {
+                        Console.WriteLine("Image: " + Model.ThumbNail);
+                        <div class="ratio ratio-16x9 rounded" style="
+                                                background-size:cover;
+                                                background-position:center;
+                                                background-image:url('/CourseImages/@Model.ThumbNail');">
+                        </div>
+                    }
+                    else
+                    {
+                        Console.WriteLine("Image: " + Model.ThumbNail);
+
+                        <div class="ratio ratio-16x9 rounded"
+                            style="
+                                                background-size:cover;
+                                                background-position:center;
+                                                background-image:url('https://placehold.co/600x400?text=No+Image+Available');">
+                        </div>
+                    }
+
+                </div>
+
+                <!-- Details -->
+                <div class="col-md-8">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="badge bg-primary-subtle text-primary">@Model.CourseSubject</span>
+                    </div>
+
+                    <h4 class="fw-bold">@Model.CourseTitle</h4>
+
+                    <div class="row mt-3 g-2">
+                        <div class="col-sm-6">
+                            <span class="material-symbols-outlined text-muted me-1">person</span>
+                            @Model.TeachingTeacherName
+                        </div>
+
+                        <div class="col-sm-6">
+                            <span class="material-symbols-outlined text-muted me-1">calendar_month</span>
+                            @Model.WeekDuration Weeks
+                        </div>
+
+                        <div class="col-12">
+                            <span class="material-symbols-outlined text-muted me-1">schedule</span>
+                            @dayOfWeek @time
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <hr class="m-0">
+
+        <!-- Student Info -->
+        <div class="card-body">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center">
+
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-light rounded-circle p-2">
+                        <span class="material-symbols-outlined text-muted">badge</span>
+                    </div>
+                    <div>
+                        <div class="text-uppercase small text-muted fw-bold">Registered For</div>
+                        <div>
+                            @fullName
+                            <span class="text-muted ms-1 small">(@email)</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="card-footer bg-light d-flex flex-column flex-sm-row justify-content-end gap-3">
+
+            <a href="/my-courses" class="btn btn-primary">
+                <span class="material-symbols-outlined me-1">school</span>
+                Go to My Courses
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Help -->
+    <div class="text-center mt-4">
+        <p class="text-muted">
+            Need help? <a href="#" class="text-primary">Contact Support</a>
+        </p>
+    </div>
+
+</div>

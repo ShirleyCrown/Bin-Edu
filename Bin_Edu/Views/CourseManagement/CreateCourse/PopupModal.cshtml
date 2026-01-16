@@ -1,0 +1,78 @@
+<div class="modal fade" id="createCourseModal" tabindex="-1" aria-labelledby="createCourseModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createCourseModalLabel">Create new course</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <!-- ERROR ALERT -->
+                <div id="create-alert" class="d-none alert alert-danger d-flex align-items-center" role="alert">
+                    <span class="material-symbols-outlined me-2">error</span>
+                    <div id="createCourseErrorMessage">
+
+                    </div>
+                </div>
+
+                <!-- FORM -->
+                <form id="createCourseForm">
+                    <div class="mb-3">
+                        <label for="CourseTitle" class="col-form-label">Title:</label>
+                        <input type="text" class="form-control" id="CourseTitle" name="CourseTitle">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="CourseDescription" class="col-form-label">Description:</label>
+                        <textarea type="text" class="form-control" id="CourseDescription"
+                            name="CourseDescription"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="SubjectId" class="col-form-label">Subject:</label>
+                        <select class="form-select" id="SubjectId" name="SubjectId" aria-label="Course subject select">
+                            <option value="" selected>Select subject</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="CoursePrice" class="col-form-label">Price (VND):</label>
+                        <input type="text" class="form-control" id="CoursePrice" name="CoursePrice">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="TeachingTeacherName" class="col-form-label">Teacher Name:</label>
+                        <input type="text" class="form-control" id="TeachingTeacherName" name="TeachingTeacherName">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="OpeningDate" class="col-form-label">Opening Date:</label>
+                        <input type="date" class="form-control" id="OpeningDate" name="OpeningDate">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="EndDate" class="col-form-label">End Date:</label>
+                        <input type="date" class="form-control" id="EndDate" name="EndDate">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ThumbNail" class="col-form-label">Course Thumbnail:</label>
+                        <input type="file" class="form-control" id="ThumbNail" name="ThumbNail" accept="image/*"
+                            onchange="previewThumbnail(event)">
+                    </div>
+
+                    <!-- PREVIEW -->
+                    <div class="mb-3 text-center">
+                        <img id="thumbnailPreview" src="https://placehold.co/600x400?text=No+Image"
+                            class="img-fluid rounded shadow-sm" style="max-height: 200px;">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createCourse()">Create</button>
+            </div>
+        </div>
+    </div>
+</div>

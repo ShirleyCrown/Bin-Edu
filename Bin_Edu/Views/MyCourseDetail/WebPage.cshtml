@@ -1,0 +1,104 @@
+@{
+    Layout = "~/Views/Layouts/StudentLayout/LayoutPage.cshtml";
+}
+
+<input type="hidden" name="CourseId" id="CourseId" value="@ViewBag.CourseId">
+
+
+<input type="hidden" name="CourseId" id="CourseId" value="@ViewBag.CourseId">
+
+<!-- Hero -->
+<section class="container mt-4">
+    <div id="courseThumbnail" class="rounded shadow-lg overflow-hidden position-relative" style="
+                background: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCZYnW-pyUcChYiO20HPbWXnK2BItQV3_1e_qDzRy3oAhMD-xiCKPFjIV-1j7P1OqCuJo0-_y_BNWbOreozKWKdv6swjW0iHt9fvgjAzL66wucbNSxzUBkoQks_YrZVJWjjpZhyLxBXpLMoc9GhEOgkoA7Lf53MlwB3n6PeH5j6yxv624dALQuNuyspJP_e_cAzSU3HHUutDqhjKMum04cs0o8T121uq33dWsgGgPtGgFUy5xb6F7RrEHBjaWrKLksx-cazbUtNCps')
+                center/cover no-repeat;
+                min-height: 320px;">
+        <div class="p-5 position-absolute bottom-0 start-0 text-white"
+            style="background: linear-gradient(to top, rgba(0,0,0,.6), transparent); width: 100%;">
+            <h1 id="courseTitle" class="fw-bold display-5">Advanced JavaScript: From Fundamentals to Functional</h1>
+        </div>
+    </div>
+</section>
+
+<div class="row g-4 my-4 mx-5">
+
+    <!-- Left Column -->
+    <div class="col-lg-8">
+
+        <!-- About -->
+        <div class="card mb-4">
+            <div class="card-header fw-bold">
+                <span class="material-symbols-outlined text-primary me-2">info</span>
+                About the Course
+            </div>
+            <div class="card-body">
+                <p id="courseDescription">
+                    This course introduces the fundamental concepts of computing and programming.
+                    It is designed for students with no prior experience.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Right Column -->
+    <div class="col-lg-4">
+
+        <!-- Quick Actions -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Quick Actions</h5>
+
+                <a href="/my-courses/@ViewBag.CourseId/timetable" class="btn btn-primary w-100 mb-2">
+                    <span class="material-symbols-outlined me-1">calendar_month</span>
+                    View Timetable
+                </a>
+
+                <a href="/my-courses/@ViewBag.CourseId/exercises" class="btn btn-outline-secondary w-100">
+                    <span class="material-symbols-outlined me-1">assignment</span>
+                    Go to Exercise
+                </a>
+            </div>
+        </div>
+
+        <!-- Course info -->
+        <div class="card mb-4">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">
+                    Subject
+                </span>
+                <strong id="courseSubject">Math</strong>
+            </div>
+
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">
+                    Duration
+                </span>
+                <strong id="courseDurationWeek">8 Weeks</strong>
+            </div>
+
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">
+                    Schedule
+                </span>
+                <strong id="courseTimetable">Tue & Thu, 6-8 PM</strong>
+            </div>
+        </div>
+
+        <!-- Instructor -->
+        <div class="card">
+            <div class="card-body">
+                <h6 class="fw-bold mb-3">Instructor</h6>
+
+                <div class="d-flex align-items-center mb-3">
+                    <div>
+                        <div id="courseTeacherName" class="fw-semibold">Teacher: Nguyen Van A</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/static/MyCourseDetail/WebScript.js"></script>

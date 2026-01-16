@@ -1,0 +1,151 @@
+@{
+    Layout = "~/Views/Layouts/StudentLayout/LayoutPage.cshtml";
+}
+
+<input type="hidden" name="CourseId" id="CourseId" value="@ViewBag.CourseId">
+
+<!-- HERO -->
+<section class="container mt-4">
+    <div id="courseThumbnail" class="rounded shadow-lg overflow-hidden position-relative" style="
+                background: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCZYnW-pyUcChYiO20HPbWXnK2BItQV3_1e_qDzRy3oAhMD-xiCKPFjIV-1j7P1OqCuJo0-_y_BNWbOreozKWKdv6swjW0iHt9fvgjAzL66wucbNSxzUBkoQks_YrZVJWjjpZhyLxBXpLMoc9GhEOgkoA7Lf53MlwB3n6PeH5j6yxv624dALQuNuyspJP_e_cAzSU3HHUutDqhjKMum04cs0o8T121uq33dWsgGgPtGgFUy5xb6F7RrEHBjaWrKLksx-cazbUtNCps')
+                center/cover no-repeat;
+                min-height: 320px;">
+        <div class="p-5 position-absolute bottom-0 start-0 text-white"
+            style="background: linear-gradient(to top, rgba(0,0,0,.6), transparent); width: 100%;">
+            <h1 id="courseTitle" class="fw-bold display-5">Advanced JavaScript: From Fundamentals to Functional</h1>
+        </div>
+    </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<div class="container my-5">
+    <div class="row g-4">
+
+        <!-- LEFT COLUMN -->
+        <div class="col-lg-8">
+
+            <!-- About -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h3 class="fw-bold mb-3">About this course</h3>
+                    <p id="courseDescription" class="courseDescription">
+                        A detailed course description explaining the course, its target audience, and prerequisites.
+                        It delves into modern JavaScript concepts like asynchronous programming, ES6+ features, and
+                        functional programming paradigms.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN (Sidebar) -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm position-sticky" style="top: 90px;">
+
+                <div class="card-body">
+
+                    <h2 id="coursePrice" class="fw-bold">$299</h2>
+
+                    @if (User.Identity.IsAuthenticated) {
+                        if (ViewBag.IsCourseRegistered != null && ViewBag.IsCourseRegistered) {
+                            <button 
+                                data-bs-toggle="modal" data-bs-target="#confirmRegisterCourseModal"
+                                class="btn btn-primary w-100 mt-3 mb-4" 
+                                disabled
+                            >
+                                You already reigstered a course
+                            </button>
+                        }
+                        else {
+                            <button 
+                                data-bs-toggle="modal" data-bs-target="#confirmRegisterCourseModal"
+                                class="btn btn-primary w-100 mt-3 mb-4"
+                            >
+                                Register Now
+                            </button>
+                        }
+                    } 
+                    else {
+                        <button 
+                            data-bs-toggle="modal" data-bs-target="#confirmRegisterCourseModal"
+                            class="btn btn-primary w-100 mt-3 mb-4" 
+                            disabled
+                        >
+                            Please log in to register course
+                        </button>
+                    }
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">
+                            Subject
+                        </span>
+                        <strong id="courseSubject">Math</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">
+                            Duration
+                        </span>
+                        <strong id="courseDurationWeek">8 Weeks</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">
+                            Schedule
+                        </span>
+                        <strong id="courseTimetable">Tue & Thu, 6-8 PM</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Instructor</span>
+                        <a href="#" id="courseTeacherName" class="fw-semibold text-primary">
+                            Jane Doe
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Related Courses -->
+    <div class="mt-5">
+        <h2 class="fw-bold mb-3">Related Courses</h2>
+
+
+        <section class="splide" aria-label="Splide Basic HTML Example">
+            <div class="splide__track">
+                <ul id="relatedCoursesSlider" class="splide__list">
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="confirmRegisterCourseModal" tabindex="-1" aria-labelledby="confirmRegisterCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="confirmRegisterCourseModalLabel">Confirm course registration</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure to register this course?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form action="/register-course/@ViewBag.CourseId" method="POST">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/static/CourseDetail/WebScript.js"></script>

@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.8.22" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.22" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.22" />
@@ -16,11 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controller\Infrastructure\Database\Migrations\" />
-    <Folder Include="Controller\Infrastructure\Database\Models\" />
-    <Folder Include="Controller\Infrastructure\Database\Seeders\" />
-    <Folder Include="Controller\ResponseDto\" />
-    <Folder Include="Controller\RequestDto\" />
+    <Folder Include="Infrastructure\Database\Migrations\" />
+    <Folder Include="Infrastructure\Database\Models\" />
     <Folder Include="Views\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
