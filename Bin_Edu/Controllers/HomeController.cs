@@ -507,9 +507,9 @@ namespace Bin_Edu.Controllers
                                     <!-- Main Content -->
                                     <tr>
                                         <td style='padding: 40px 30px;'>
-                                            <h2 style='margin: 0 0 20px 0; color: #333333; font-size: 24px;'>Than you for registering our course</h2>
+                                            <h2 style='margin: 0 0 20px 0; color: #333333; font-size: 24px;'>Thank you for registering our course</h2>
                                             <p style='margin: 0 0 15px 0; color: #666666; font-size: 16px; line-height: 1.6;'>
-                                                Thank you for registering our course, this help us earn lots of money from your.
+                                                Thank you for registering our course, this help us earn lots of money from you.
                                             </p>
                                             <p style='margin: 0 0 25px 0; color: #666666; font-size: 16px; line-height: 1.6;'>
                                                 To go into your course, please click to a link below.
@@ -519,7 +519,7 @@ namespace Bin_Edu.Controllers
                                             <table role='presentation' style='margin: 0 auto;'>
                                                 <tr>
                                                     <td style='text-align: center; padding: 20px 0;'>
-                                                        <a href='/my-courses' target='_blank' style='background-color: #0d6efd; color: #ffffff; padding: 14px 40px; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold; display: inline-block;'>View my courses</a>
+                                                        <a href='https://localhost:7226/my-courses' target='_blank' style='background-color: #0d6efd; color: #ffffff; padding: 14px 40px; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold; display: inline-block;'>View my courses</a>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -568,7 +568,8 @@ namespace Bin_Edu.Controllers
                         StartTime = g.Key.StartTime,
                         EndTime = g.Key.EndTime
                     })
-                    .ToList()
+                    .ToList(),
+                ThumbNail = query.ThumbNail
             };
 
 

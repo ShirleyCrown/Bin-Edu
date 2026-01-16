@@ -18,26 +18,22 @@ async function fetchMyCourses(page = 0) {
 
             const courseDayOfWeekText = responseData.myCourses[i].timetables.map(t => t.dayOfWeek).join(" & ");
 
-
+            const imgUrl = responseData.myCourses[i].thumbNail
+                ? `CourseImages/${responseData.myCourses[i].thumbNail}`
+                : `https://placehold.co/600x400?text=No+Image+Available`;
             courseGrid.innerHTML += 
             `
                 <div class="col-md-6 col-lg-4">
                     <div class="card shadow-sm border-0">
                         <div class="position-relative">
                             ${
-                                responseData.myCourses[i].courseSubject == "Math" ? 
+                               
                                 ` <img 
-                                    src="https://www.shutterstock.com/shutterstock/photos/1859813464/display_1500/stock-vector-math-horizontal-banner-presentation-website-isolated-lettering-typography-idea-with-icons-1859813464.jpg"
+                                    src="${imgUrl}"
                                     class="card-img-top" style="height: 16rem" alt="">` 
-                                : 
-                                responseData.myCourses[i].courseSubject == "Literature" ? 
-                                ` <img 
-                                    src="https://www.shutterstock.com/image-photo/image-latin-american-continent-on-260nw-2640131997.jpg"
-                                    class="card-img-top" style="height: 16rem" alt="">` 
-                                : 
-                                ` <img 
-                                    src="https://www.shutterstock.com/image-vector/english-language-learning-concept-vector-260nw-1827529367.jpg"
-                                    class="card-img-top" style="height: 16rem" alt="">` 
+                                
+                               
+                               
                             }
 
                             <span class="badge bg-success position-absolute top-0 end-0 m-3">

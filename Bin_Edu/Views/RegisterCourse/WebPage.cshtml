@@ -5,12 +5,13 @@
     Layout = "~/Views/Layouts/StudentLayout/LayoutPage.cshtml";
 
     string? fullName = User.Claims
-        .FirstOrDefault(c => c.Type == "FullName")?.Value;
+    .FirstOrDefault(c => c.Type == "FullName")?.Value;
     string? email = User.FindFirstValue(ClaimTypes.Email);
     string dayOfWeek = "";
     string time = "";
 
-    foreach (var timetable in Model.Timetables) {
+    foreach (var timetable in Model.Timetables)
+    {
         dayOfWeek += timetable.DayOfWeek + " ";
     }
 
@@ -48,33 +49,27 @@
 
                 <!-- Image -->
                 <div class="col-md-4">
-                    @if (Model.CourseSubject == "Math") {
-                        <div 
-                            class="ratio ratio-16x9 rounded"
-                            style="
-                                background-size:cover;
-                                background-position:center;
-                                background-image:url('https://www.shutterstock.com/shutterstock/photos/1859813464/display_1500/stock-vector-math-horizontal-banner-presentation-website-isolated-lettering-typography-idea-with-icons-1859813464.jpg');">
-                        </div>
-                    } 
-                    else if (Model.CourseSubject == "Literature") {
-                        <div 
-                            class="ratio ratio-16x9 rounded"
-                            style="
-                                background-size:cover;
-                                background-position:center;
-                                background-image:url('https://www.shutterstock.com/image-photo/image-latin-american-continent-on-260nw-2640131997.jpg');">
-                        </div>
-                    } 
-                    else {
-                        <div 
-                            class="ratio ratio-16x9 rounded"
-                            style="
-                                background-size:cover;
-                                background-position:center;
-                                background-image:url('https://www.shutterstock.com/image-vector/english-language-learning-concept-vector-260nw-1827529367.jpg');">
+                    @if (Model.ThumbNail != null && Model.ThumbNail != "")
+                    {
+                        Console.WriteLine("Image: " + Model.ThumbNail);
+                        <div class="ratio ratio-16x9 rounded" style="
+                                                background-size:cover;
+                                                background-position:center;
+                                                background-image:url('/CourseImages/@Model.ThumbNail');">
                         </div>
                     }
+                    else
+                    {
+                        Console.WriteLine("Image: " + Model.ThumbNail);
+
+                        <div class="ratio ratio-16x9 rounded"
+                            style="
+                                                background-size:cover;
+                                                background-position:center;
+                                                background-image:url('https://placehold.co/600x400?text=No+Image+Available');">
+                        </div>
+                    }
+
                 </div>
 
                 <!-- Details -->
