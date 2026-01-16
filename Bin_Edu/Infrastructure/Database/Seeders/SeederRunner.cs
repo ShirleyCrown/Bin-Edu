@@ -235,7 +235,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CoursePrice = 1200000,
                     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
                     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7),
-                    ThumbNail = null
+                    ThumbNail = "1.png"
                 },
                 new Course
                 {
@@ -246,7 +246,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CoursePrice = 1500000,
                     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
                     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(12 * 7),
-                    ThumbNail = null
+                    ThumbNail = "2.png"
                 },
                 new Course
                 {
@@ -257,7 +257,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CoursePrice = 1000000,
                     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
                     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(20 * 7),
-                    ThumbNail = null
+                    ThumbNail = "3.png"
                 },
                 new Course
                 {
@@ -268,7 +268,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CoursePrice = 1800000,
                     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
                     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(15 * 7),
-                    ThumbNail = null
+                    ThumbNail = "4.png"
                 },
                 new Course
                 {
@@ -279,7 +279,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CoursePrice = 900000,
                     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
                     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(17 * 7),
-                    ThumbNail = null
+                    ThumbNail = "5.png"
                 },
                 new Course
                 {
@@ -290,7 +290,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CoursePrice = 1100000,
                     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
                     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7),
-                    ThumbNail = null
+                    ThumbNail = "6.png"
                 },
                 new Course
                 {
@@ -301,7 +301,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CoursePrice = 1600000,
                     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
                     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7),
-                    ThumbNail = null
+                    ThumbNail = "7.png"
                 },
                 new Course
                 {
@@ -312,7 +312,7 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CoursePrice = 3200000,
                     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
                     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(10 * 7),
-                    ThumbNail = null
+                    ThumbNail = "8.png"
                 },
                 new Course
                 {
@@ -323,9 +323,9 @@ namespace Bin_Edu.Infrastructure.Database.Seeders
                     CoursePrice = 1400000,
                     OpeningDate = DateOnly.FromDateTime(DateTime.Today),
                     EndDate = DateOnly.FromDateTime(DateTime.Today).AddDays(16 * 7),
-                    ThumbNail = null
+                    ThumbNail = "9.png"
                 }
-            }; 
+            };
 
 
             foreach (var course in courses)
